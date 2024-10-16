@@ -8,22 +8,13 @@
     "test": "test"
   },
   "scripts": {
-    "clean": "rimraf dist",
-    "format": "prettier --write \"{src,test}/**/*.{js,ts}\" \"**/*.md\"",
-    "format:check": "prettier --list-different \"{src,test}/**/*.{js,ts}\" \"**/*.md\"",
-    "lint": "eslint --ext js,ts src test",
     "test": "vitest --run",
     "type-tests": "tsc -p tsconfig.test.json --noEmit",
     "test:watch": "vitest --watch",
     "test:cov": "vitest --coverage",
-    "build": "yarn clean && tsup",
-    "prepublishOnly": "yarn clean && yarn format:check && yarn lint && yarn test",
-    "prepack": "yarn build",
-    "examples:lint": "eslint --ext js,ts examples",
-    "tsc": "tsc",
     "dartBuildCjs": "dart compile js ./lib/main.dart --output ./dist/redux.js",
     "dartBuildMjs": "dart compile wasm ./lib/main.dart --output ./dist/redux.wasm",
-    "dartTest": "npm run dartBuild && npm run test"
+    "dartTest": "npm run dartBuildMjs && npm run test"
   },
   "devDependencies": {
     "@babel/core": "^7.24.3",
