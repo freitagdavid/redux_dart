@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "engine": "v2",
+  "file": "redux.js",
+  "sourceRoot": "",
+  "sources": ["org-dartlang-sdk:///lib/_internal/js_shared/lib/rti.dart","../lib/main.dart"],
+  "names": ["_Universe.addRules","_Universe.addErasedTypes","_Utils.objectAssign","main","List","Map","Null","Object","String","addErasedTypes","addRules","bool","closureFromTearOff","double","findType","int","num","objectAssign","throwLateFieldADI","arrayLength","asString","erasedTypes","objectKeys","typeRules"],
+  "mappings": "A;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EAskEaA;sBADCA;MACRA,qCA3CAA,WA2C+CA;K;4BA2BvCC;MACRA,OAAOA,8BApEPA,WAoEiDA;K;uBAyoDzCC;MAFRA;;sBAkBqCA;MAZvCA;kBAxBmCA;;;IA4BrCA,C;QC9uHFC;IAEAA,C",
+  "x_org_dartlang_dart2js": {
+    "minified_names": {
+      "global": "List,4,Map,5,Null,6,Object,7,String,8,_Universe_addErasedTypes,9,_Universe_addRules,10,_Utils_objectAssign,17,bool,11,closureFromTearOff,12,double,13,findType,14,int,15,main,3,num,16,throwLateFieldADI,18",
+      "instance": ""
+    },
+    "frames": "wsTAskE0BuBW;oGA4BAFW;mDA2oDXCqE;AACEHe;kDAEEC8C;"
+  }
+}
