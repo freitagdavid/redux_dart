@@ -6,7 +6,7 @@ export default defineConfig({
     dir: "test",
     alias: {
       redux: new URL(
-        process.env.TEST_DIST ? "node_modules/redux" : "dist/redux.mjs",
+        process.env.TEST_DIST ? "node_modules/redux" : "./dist/dartscript/redux.js",
         import.meta.url
       ).pathname,
 

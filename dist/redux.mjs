@@ -242,7 +242,9 @@ _242:     (s) => {
     ,
 _245: l => new Array(l),
 _249: (o, p) => o[p],
-_253: o => String(o)
+_253: o => String(o),
+_275: x0 => globalThis.exportedFunction = x0,
+_276: f => finalizeWrapper(f, function(x0,x1,x2) { return dartInstance.exports._276(f,arguments.length,x0,x1,x2) })
     };
 
     const baseImports = {

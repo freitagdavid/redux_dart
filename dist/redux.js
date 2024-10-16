@@ -225,12 +225,2123 @@
     typesOffset = init.types.length;
     hunk(hunkHelpers, init, holders, $);
   }
-  var A = {
+  var J = {
+    JSArray_markFixedList(list, $T) {
+      list.fixed$length = Array;
+      return list;
+    },
+    getInterceptor$(receiver) {
+      if (typeof receiver == "number") {
+        if (Math.floor(receiver) == receiver)
+          return J.JSInt.prototype;
+        return J.JSNumNotInt.prototype;
+      }
+      if (typeof receiver == "string")
+        return J.JSString.prototype;
+      if (receiver == null)
+        return J.JSNull.prototype;
+      if (typeof receiver == "boolean")
+        return J.JSBool.prototype;
+      if (Array.isArray(receiver))
+        return J.JSArray.prototype;
+      if (typeof receiver == "function")
+        return J.JavaScriptFunction.prototype;
+      if (typeof receiver == "object") {
+        if (receiver instanceof A.Object) {
+          return receiver;
+        } else {
+          return J.JavaScriptObject.prototype;
+        }
+      }
+      return receiver;
+    },
+    getInterceptor$as(receiver) {
+      if (typeof receiver == "string")
+        return J.JSString.prototype;
+      if (receiver == null)
+        return receiver;
+      if (Array.isArray(receiver))
+        return J.JSArray.prototype;
+      return receiver;
+    },
+    get$hashCode$(receiver) {
+      return J.getInterceptor$(receiver).get$hashCode(receiver);
+    },
+    get$length$as(receiver) {
+      return J.getInterceptor$as(receiver).get$length(receiver);
+    },
+    get$runtimeType$(receiver) {
+      return J.getInterceptor$(receiver).get$runtimeType(receiver);
+    },
+    $eq$(receiver, a0) {
+      if (receiver == null)
+        return a0 == null;
+      if (typeof receiver != "object")
+        return a0 != null && receiver === a0;
+      return J.getInterceptor$(receiver).$eq(receiver, a0);
+    },
+    noSuchMethod$1$(receiver, a0) {
+      return J.getInterceptor$(receiver).noSuchMethod$1(receiver, a0);
+    },
+    toString$0$(receiver) {
+      return J.getInterceptor$(receiver).toString$0(receiver);
+    },
+    Interceptor: function Interceptor() {
+    },
+    JSBool: function JSBool() {
+    },
+    JSNull: function JSNull() {
+    },
+    JavaScriptObject: function JavaScriptObject() {
+    },
+    LegacyJavaScriptObject: function LegacyJavaScriptObject() {
+    },
+    JavaScriptFunction: function JavaScriptFunction() {
+    },
+    JSArray: function JSArray(t0) {
+      this.$ti = t0;
+    },
+    JSUnmodifiableArray: function JSUnmodifiableArray(t0) {
+      this.$ti = t0;
+    },
+    ArrayIterator: function ArrayIterator(t0, t1, t2) {
+      var _ = this;
+      _._iterable = t0;
+      _._length = t1;
+      _._index = 0;
+      _._current = null;
+      _.$ti = t2;
+    },
+    JSNumber: function JSNumber() {
+    },
+    JSInt: function JSInt() {
+    },
+    JSNumNotInt: function JSNumNotInt() {
+    },
+    JSString: function JSString() {
+    }
+  },
+  A = {JS_CONST: function JS_CONST() {
+    },
+    isToStringVisiting(object) {
+      var t1, i;
+      for (t1 = $.toStringVisiting.length, i = 0; i < t1; ++i)
+        if (object === $.toStringVisiting[i])
+          return true;
+      return false;
+    },
+    LateError: function LateError(t0) {
+      this._message = t0;
+    },
+    Symbol: function Symbol(t0) {
+      this._name = t0;
+    },
+    unminifyOrTag(rawClassName) {
+      var preserved = init.mangledGlobalNames[rawClassName];
+      if (preserved != null)
+        return preserved;
+      return rawClassName;
+    },
+    S(value) {
+      var result;
+      if (typeof value == "string")
+        return value;
+      if (typeof value == "number") {
+        if (value !== 0)
+          return "" + value;
+      } else if (true === value)
+        return "true";
+      else if (false === value)
+        return "false";
+      else if (value == null)
+        return "null";
+      result = J.toString$0$(value);
+      return result;
+    },
+    Primitives_objectHashCode(object) {
+      var hash,
+        property = $.Primitives__identityHashCodeProperty;
+      if (property == null)
+        property = $.Primitives__identityHashCodeProperty = Symbol("identityHashCode");
+      hash = object[property];
+      if (hash == null) {
+        hash = Math.random() * 0x3fffffff | 0;
+        object[property] = hash;
+      }
+      return hash;
+    },
+    Primitives_objectTypeName(object) {
+      return A.Primitives__objectTypeNameNewRti(object);
+    },
+    Primitives__objectTypeNameNewRti(object) {
+      var interceptor, t1, dispatchName, $constructor, constructorName;
+      if (object instanceof A.Object)
+        return A._rtiToString(A.instanceType(object), null);
+      interceptor = J.getInterceptor$(object);
+      if (interceptor !== B.Interceptor_methods)
+        t1 = interceptor === B.JavaScriptObject_methods;
+      else
+        t1 = true;
+      if (t1) {
+        dispatchName = B.C_JS_CONST(object);
+        if (dispatchName !== "Object" && dispatchName !== "")
+          return dispatchName;
+        $constructor = object.constructor;
+        if (typeof $constructor == "function") {
+          constructorName = $constructor.name;
+          if (typeof constructorName == "string" && constructorName !== "Object" && constructorName !== "")
+            return constructorName;
+        }
+      }
+      return A._rtiToString(A.instanceType(object), null);
+    },
+    Primitives_safeToString(object) {
+      if (typeof object == "number" || A._isBool(object))
+        return J.toString$0$(object);
+      if (typeof object == "string")
+        return JSON.stringify(object);
+      if (object instanceof A.Closure)
+        return object.toString$0(0);
+      return "Instance of '" + A.Primitives_objectTypeName(object) + "'";
+    },
+    Primitives_functionNoSuchMethod($function, positionalArguments, namedArguments) {
+      var $arguments, namedArgumentList, t1 = {};
+      t1.argumentCount = 0;
+      $arguments = [];
+      namedArgumentList = [];
+      t1.argumentCount = positionalArguments.length;
+      B.JSArray_methods.addAll$1($arguments, positionalArguments);
+      t1.names = "";
+      if (namedArguments != null && namedArguments.__js_helper$_length !== 0)
+        namedArguments.forEach$1(0, new A.Primitives_functionNoSuchMethod_closure(t1, namedArgumentList, $arguments));
+      return J.noSuchMethod$1$($function, new A.JSInvocationMirror(B.Symbol_call, 0, $arguments, namedArgumentList, 0));
+    },
+    Primitives_applyFunction($function, positionalArguments, namedArguments) {
+      var argumentCount, jsStub,
+        t1 = namedArguments == null || namedArguments.__js_helper$_length === 0;
+      if (t1) {
+        argumentCount = positionalArguments.length;
+        if (argumentCount === 0) {
+          if (!!$function.call$0)
+            return $function.call$0();
+        } else if (argumentCount === 1) {
+          if (!!$function.call$1)
+            return $function.call$1(positionalArguments[0]);
+        } else if (argumentCount === 2) {
+          if (!!$function.call$2)
+            return $function.call$2(positionalArguments[0], positionalArguments[1]);
+        } else if (argumentCount === 3) {
+          if (!!$function.call$3)
+            return $function.call$3(positionalArguments[0], positionalArguments[1], positionalArguments[2]);
+        } else if (argumentCount === 4) {
+          if (!!$function.call$4)
+            return $function.call$4(positionalArguments[0], positionalArguments[1], positionalArguments[2], positionalArguments[3]);
+        } else if (argumentCount === 5)
+          if (!!$function.call$5)
+            return $function.call$5(positionalArguments[0], positionalArguments[1], positionalArguments[2], positionalArguments[3], positionalArguments[4]);
+        jsStub = $function["call" + "$" + argumentCount];
+        if (jsStub != null)
+          return jsStub.apply($function, positionalArguments);
+      }
+      return A.Primitives__generalApplyFunction($function, positionalArguments, namedArguments);
+    },
+    Primitives__generalApplyFunction($function, positionalArguments, namedArguments) {
+      var defaultValuesClosure, t1, defaultValues, interceptor, jsFunction, maxArguments, missingDefaults, $arguments, keys, _i, defaultValue, used, key,
+        argumentCount = positionalArguments.length,
+        requiredParameterCount = $function.$requiredArgCount;
+      if (argumentCount < requiredParameterCount)
+        return A.Primitives_functionNoSuchMethod($function, positionalArguments, namedArguments);
+      defaultValuesClosure = $function.$defaultValues;
+      t1 = defaultValuesClosure == null;
+      defaultValues = !t1 ? defaultValuesClosure() : null;
+      interceptor = J.getInterceptor$($function);
+      jsFunction = interceptor["call*"];
+      if (typeof jsFunction == "string")
+        jsFunction = interceptor[jsFunction];
+      if (t1) {
+        if (namedArguments != null && namedArguments.__js_helper$_length !== 0)
+          return A.Primitives_functionNoSuchMethod($function, positionalArguments, namedArguments);
+        if (argumentCount === requiredParameterCount)
+          return jsFunction.apply($function, positionalArguments);
+        return A.Primitives_functionNoSuchMethod($function, positionalArguments, namedArguments);
+      }
+      if (Array.isArray(defaultValues)) {
+        if (namedArguments != null && namedArguments.__js_helper$_length !== 0)
+          return A.Primitives_functionNoSuchMethod($function, positionalArguments, namedArguments);
+        maxArguments = requiredParameterCount + defaultValues.length;
+        if (argumentCount > maxArguments)
+          return A.Primitives_functionNoSuchMethod($function, positionalArguments, null);
+        if (argumentCount < maxArguments) {
+          missingDefaults = defaultValues.slice(argumentCount - requiredParameterCount);
+          $arguments = A.List_List$of(positionalArguments, type$.dynamic);
+          B.JSArray_methods.addAll$1($arguments, missingDefaults);
+        } else
+          $arguments = positionalArguments;
+        return jsFunction.apply($function, $arguments);
+      } else {
+        if (argumentCount > requiredParameterCount)
+          return A.Primitives_functionNoSuchMethod($function, positionalArguments, namedArguments);
+        $arguments = A.List_List$of(positionalArguments, type$.dynamic);
+        keys = Object.keys(defaultValues);
+        if (namedArguments == null)
+          for (t1 = keys.length, _i = 0; _i < keys.length; keys.length === t1 || (0, A.throwConcurrentModificationError)(keys), ++_i) {
+            defaultValue = defaultValues[A._asString(keys[_i])];
+            if (B.C__Required === defaultValue)
+              return A.Primitives_functionNoSuchMethod($function, $arguments, namedArguments);
+            B.JSArray_methods.add$1($arguments, defaultValue);
+          }
+        else {
+          for (t1 = keys.length, used = 0, _i = 0; _i < keys.length; keys.length === t1 || (0, A.throwConcurrentModificationError)(keys), ++_i) {
+            key = A._asString(keys[_i]);
+            if (namedArguments.containsKey$1(key)) {
+              ++used;
+              B.JSArray_methods.add$1($arguments, namedArguments.$index(0, key));
+            } else {
+              defaultValue = defaultValues[key];
+              if (B.C__Required === defaultValue)
+                return A.Primitives_functionNoSuchMethod($function, $arguments, namedArguments);
+              B.JSArray_methods.add$1($arguments, defaultValue);
+            }
+          }
+          if (used !== namedArguments.__js_helper$_length)
+            return A.Primitives_functionNoSuchMethod($function, $arguments, namedArguments);
+        }
+        return jsFunction.apply($function, $arguments);
+      }
+    },
+    ioore(receiver, index) {
+      if (receiver == null)
+        J.get$length$as(receiver);
+      throw A.wrapException(A.diagnoseIndexError(receiver, index));
+    },
+    diagnoseIndexError(indexable, index) {
+      var $length, _s5_ = "index";
+      if (!A._isInt(index))
+        return new A.ArgumentError(true, index, _s5_, null);
+      $length = J.get$length$as(indexable);
+      if (index < 0 || index >= $length)
+        return new A.IndexError($length, true, index, _s5_, "Index out of range");
+      return new A.RangeError(null, null, true, index, _s5_, "Value not in range");
+    },
+    wrapException(ex) {
+      return A.initializeExceptionWrapper(new Error(), ex);
+    },
+    initializeExceptionWrapper(wrapper, ex) {
+      var t1;
+      if (ex == null)
+        ex = new A.TypeError();
+      wrapper.dartException = ex;
+      t1 = A.toStringWrapper;
+      if ("defineProperty" in Object) {
+        Object.defineProperty(wrapper, "message", {get: t1});
+        wrapper.name = "";
+      } else
+        wrapper.toString = t1;
+      return wrapper;
+    },
+    toStringWrapper() {
+      return J.toString$0$(this.dartException);
+    },
+    throwExpression(ex) {
+      throw A.wrapException(ex);
+    },
+    throwExpressionWithWrapper(ex, wrapper) {
+      throw A.initializeExceptionWrapper(wrapper, ex);
+    },
+    throwConcurrentModificationError(collection) {
+      throw A.wrapException(A.ConcurrentModificationError$(collection));
+    },
+    objectHashCode(object) {
+      if (object == null)
+        return J.get$hashCode$(object);
+      if (typeof object == "object")
+        return A.Primitives_objectHashCode(object);
+      return J.get$hashCode$(object);
+    },
+    Closure_fromTearOff(parameters) {
+      var $prototype, $constructor, t2, trampoline, applyTrampoline, i, stub, stub0, stubName, stubCallName,
+        container = parameters.co,
+        isStatic = parameters.iS,
+        isIntercepted = parameters.iI,
+        needsDirectAccess = parameters.nDA,
+        applyTrampolineIndex = parameters.aI,
+        funsOrNames = parameters.fs,
+        callNames = parameters.cs,
+        $name = funsOrNames[0],
+        callName = callNames[0],
+        $function = container[$name],
+        t1 = parameters.fT;
+      t1.toString;
+      $prototype = isStatic ? Object.create(new A.StaticClosure().constructor.prototype) : Object.create(new A.BoundClosure(null, null).constructor.prototype);
+      $prototype.$initialize = $prototype.constructor;
+      $constructor = isStatic ? function static_tear_off() {
+        this.$initialize();
+      } : function tear_off(a, b) {
+        this.$initialize(a, b);
+      };
+      $prototype.constructor = $constructor;
+      $constructor.prototype = $prototype;
+      $prototype.$_name = $name;
+      $prototype.$_target = $function;
+      t2 = !isStatic;
+      if (t2)
+        trampoline = A.Closure_forwardCallTo($name, $function, isIntercepted, needsDirectAccess);
+      else {
+        $prototype.$static_name = $name;
+        trampoline = $function;
+      }
+      $prototype.$signature = A.Closure__computeSignatureFunctionNewRti(t1, isStatic, isIntercepted);
+      $prototype[callName] = trampoline;
+      for (applyTrampoline = trampoline, i = 1; i < funsOrNames.length; ++i) {
+        stub = funsOrNames[i];
+        if (typeof stub == "string") {
+          stub0 = container[stub];
+          stubName = stub;
+          stub = stub0;
+        } else
+          stubName = "";
+        stubCallName = callNames[i];
+        if (stubCallName != null) {
+          if (t2)
+            stub = A.Closure_forwardCallTo(stubName, stub, isIntercepted, needsDirectAccess);
+          $prototype[stubCallName] = stub;
+        }
+        if (i === applyTrampolineIndex)
+          applyTrampoline = stub;
+      }
+      $prototype["call*"] = applyTrampoline;
+      $prototype.$requiredArgCount = parameters.rC;
+      $prototype.$defaultValues = parameters.dV;
+      return $constructor;
+    },
+    Closure__computeSignatureFunctionNewRti(functionType, isStatic, isIntercepted) {
+      if (typeof functionType == "number")
+        return functionType;
+      if (typeof functionType == "string") {
+        if (isStatic)
+          throw A.wrapException("Cannot compute signature for static tearoff.");
+        return function(recipe, evalOnReceiver) {
+          return function() {
+            return evalOnReceiver(this, recipe);
+          };
+        }(functionType, A.BoundClosure_evalRecipe);
+      }
+      throw A.wrapException("Error in functionType of tearoff");
+    },
+    Closure_cspForwardCall(arity, needsDirectAccess, stubName, $function) {
+      var getReceiver = A.BoundClosure_receiverOf;
+      switch (needsDirectAccess ? -1 : arity) {
+        case 0:
+          return function(entry, receiverOf) {
+            return function() {
+              return receiverOf(this)[entry]();
+            };
+          }(stubName, getReceiver);
+        case 1:
+          return function(entry, receiverOf) {
+            return function(a) {
+              return receiverOf(this)[entry](a);
+            };
+          }(stubName, getReceiver);
+        case 2:
+          return function(entry, receiverOf) {
+            return function(a, b) {
+              return receiverOf(this)[entry](a, b);
+            };
+          }(stubName, getReceiver);
+        case 3:
+          return function(entry, receiverOf) {
+            return function(a, b, c) {
+              return receiverOf(this)[entry](a, b, c);
+            };
+          }(stubName, getReceiver);
+        case 4:
+          return function(entry, receiverOf) {
+            return function(a, b, c, d) {
+              return receiverOf(this)[entry](a, b, c, d);
+            };
+          }(stubName, getReceiver);
+        case 5:
+          return function(entry, receiverOf) {
+            return function(a, b, c, d, e) {
+              return receiverOf(this)[entry](a, b, c, d, e);
+            };
+          }(stubName, getReceiver);
+        default:
+          return function(f, receiverOf) {
+            return function() {
+              return f.apply(receiverOf(this), arguments);
+            };
+          }($function, getReceiver);
+      }
+    },
+    Closure_forwardCallTo(stubName, $function, isIntercepted, needsDirectAccess) {
+      if (isIntercepted)
+        return A.Closure_forwardInterceptedCallTo(stubName, $function, needsDirectAccess);
+      return A.Closure_cspForwardCall($function.length, needsDirectAccess, stubName, $function);
+    },
+    Closure_cspForwardInterceptedCall(arity, needsDirectAccess, stubName, $function) {
+      var getReceiver = A.BoundClosure_receiverOf,
+        getInterceptor = A.BoundClosure_interceptorOf;
+      switch (needsDirectAccess ? -1 : arity) {
+        case 0:
+          throw A.wrapException(new A.RuntimeError("Intercepted function with no arguments."));
+        case 1:
+          return function(entry, interceptorOf, receiverOf) {
+            return function() {
+              return interceptorOf(this)[entry](receiverOf(this));
+            };
+          }(stubName, getInterceptor, getReceiver);
+        case 2:
+          return function(entry, interceptorOf, receiverOf) {
+            return function(a) {
+              return interceptorOf(this)[entry](receiverOf(this), a);
+            };
+          }(stubName, getInterceptor, getReceiver);
+        case 3:
+          return function(entry, interceptorOf, receiverOf) {
+            return function(a, b) {
+              return interceptorOf(this)[entry](receiverOf(this), a, b);
+            };
+          }(stubName, getInterceptor, getReceiver);
+        case 4:
+          return function(entry, interceptorOf, receiverOf) {
+            return function(a, b, c) {
+              return interceptorOf(this)[entry](receiverOf(this), a, b, c);
+            };
+          }(stubName, getInterceptor, getReceiver);
+        case 5:
+          return function(entry, interceptorOf, receiverOf) {
+            return function(a, b, c, d) {
+              return interceptorOf(this)[entry](receiverOf(this), a, b, c, d);
+            };
+          }(stubName, getInterceptor, getReceiver);
+        case 6:
+          return function(entry, interceptorOf, receiverOf) {
+            return function(a, b, c, d, e) {
+              return interceptorOf(this)[entry](receiverOf(this), a, b, c, d, e);
+            };
+          }(stubName, getInterceptor, getReceiver);
+        default:
+          return function(f, interceptorOf, receiverOf) {
+            return function() {
+              var a = [receiverOf(this)];
+              Array.prototype.push.apply(a, arguments);
+              return f.apply(interceptorOf(this), a);
+            };
+          }($function, getInterceptor, getReceiver);
+      }
+    },
+    Closure_forwardInterceptedCallTo(stubName, $function, needsDirectAccess) {
+      var arity, t1;
+      if ($.BoundClosure__interceptorFieldNameCache == null)
+        $.BoundClosure__interceptorFieldNameCache = A.BoundClosure__computeFieldNamed("interceptor");
+      if ($.BoundClosure__receiverFieldNameCache == null)
+        $.BoundClosure__receiverFieldNameCache = A.BoundClosure__computeFieldNamed("receiver");
+      arity = $function.length;
+      t1 = A.Closure_cspForwardInterceptedCall(arity, needsDirectAccess, stubName, $function);
+      return t1;
+    },
+    closureFromTearOff(parameters) {
+      return A.Closure_fromTearOff(parameters);
+    },
+    BoundClosure_evalRecipe(closure, recipe) {
+      return A._Universe_evalInEnvironment(init.typeUniverse, A.instanceType(closure._receiver), recipe);
+    },
+    BoundClosure_receiverOf(closure) {
+      return closure._receiver;
+    },
+    BoundClosure_interceptorOf(closure) {
+      return closure._interceptor;
+    },
+    BoundClosure__computeFieldNamed(fieldName) {
+      var t1, i, $name,
+        template = new A.BoundClosure("receiver", "interceptor"),
+        names = J.JSArray_markFixedList(Object.getOwnPropertyNames(template), type$.nullable_Object);
+      for (t1 = names.length, i = 0; i < t1; ++i) {
+        $name = names[i];
+        if (template[$name] === fieldName)
+          return $name;
+      }
+      throw A.wrapException(A.ArgumentError$("Field name " + fieldName + " not found."));
+    },
+    throwCyclicInit(staticName) {
+      throw A.wrapException(new A._CyclicInitializationError(staticName));
+    },
+    createRecordTypePredicate(shape, fieldRtis) {
+      var $length = fieldRtis.length,
+        $function = init.rttc["" + $length + ";" + shape];
+      if ($function == null)
+        return null;
+      if ($length === 0)
+        return $function;
+      if ($length === $function.length)
+        return $function.apply(null, fieldRtis);
+      return $function(fieldRtis);
+    },
+    ConstantMapView: function ConstantMapView(t0, t1) {
+      this._map = t0;
+      this.$ti = t1;
+    },
+    ConstantMap: function ConstantMap() {
+    },
+    ConstantStringMap: function ConstantStringMap(t0, t1, t2) {
+      this._jsIndex = t0;
+      this._values = t1;
+      this.$ti = t2;
+    },
+    JSInvocationMirror: function JSInvocationMirror(t0, t1, t2, t3, t4) {
+      var _ = this;
+      _._memberName = t0;
+      _.__js_helper$_kind = t1;
+      _._arguments = t2;
+      _._namedArgumentNames = t3;
+      _._typeArgumentCount = t4;
+    },
+    Primitives_functionNoSuchMethod_closure: function Primitives_functionNoSuchMethod_closure(t0, t1, t2) {
+      this._box_0 = t0;
+      this.namedArgumentList = t1;
+      this.$arguments = t2;
+    },
+    Closure: function Closure() {
+    },
+    Closure2Args: function Closure2Args() {
+    },
+    TearOffClosure: function TearOffClosure() {
+    },
+    StaticClosure: function StaticClosure() {
+    },
+    BoundClosure: function BoundClosure(t0, t1) {
+      this._receiver = t0;
+      this._interceptor = t1;
+    },
+    _CyclicInitializationError: function _CyclicInitializationError(t0) {
+      this.variableName = t0;
+    },
+    RuntimeError: function RuntimeError(t0) {
+      this.message = t0;
+    },
+    _Required: function _Required() {
+    },
+    JsLinkedHashMap: function JsLinkedHashMap(t0) {
+      var _ = this;
+      _.__js_helper$_length = 0;
+      _._last = _._first = _.__js_helper$_rest = _._nums = _._strings = null;
+      _._modifications = 0;
+      _.$ti = t0;
+    },
+    LinkedHashMapCell: function LinkedHashMapCell(t0, t1) {
+      this.hashMapCellKey = t0;
+      this.hashMapCellValue = t1;
+      this._next = null;
+    },
+    Rti__getQuestionFromStar(universe, rti) {
+      var question = rti._precomputed1;
+      return question == null ? rti._precomputed1 = A._Universe__lookupQuestionRti(universe, rti._primary, true) : question;
+    },
+    Rti__getFutureFromFutureOr(universe, rti) {
+      var future = rti._precomputed1;
+      return future == null ? rti._precomputed1 = A._Universe__lookupInterfaceRti(universe, "Future", [rti._primary]) : future;
+    },
+    Rti__isUnionOfFunctionType(rti) {
+      var kind = rti._kind;
+      if (kind === 6 || kind === 7 || kind === 8)
+        return A.Rti__isUnionOfFunctionType(rti._primary);
+      return kind === 12 || kind === 13;
+    },
+    Rti__getCanonicalRecipe(rti) {
+      return rti._canonicalRecipe;
+    },
+    findType(recipe) {
+      return A._Universe_eval(init.typeUniverse, recipe, false);
+    },
+    _substitute(universe, rti, typeArguments, depth) {
+      var baseType, substitutedBaseType, interfaceTypeArguments, substitutedInterfaceTypeArguments, base, substitutedBase, $arguments, substitutedArguments, t1, fields, substitutedFields, returnType, substitutedReturnType, functionParameters, substitutedFunctionParameters, bounds, substitutedBounds, index, argument,
+        kind = rti._kind;
+      switch (kind) {
+        case 5:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+          return rti;
+        case 6:
+          baseType = rti._primary;
+          substitutedBaseType = A._substitute(universe, baseType, typeArguments, depth);
+          if (substitutedBaseType === baseType)
+            return rti;
+          return A._Universe__lookupStarRti(universe, substitutedBaseType, true);
+        case 7:
+          baseType = rti._primary;
+          substitutedBaseType = A._substitute(universe, baseType, typeArguments, depth);
+          if (substitutedBaseType === baseType)
+            return rti;
+          return A._Universe__lookupQuestionRti(universe, substitutedBaseType, true);
+        case 8:
+          baseType = rti._primary;
+          substitutedBaseType = A._substitute(universe, baseType, typeArguments, depth);
+          if (substitutedBaseType === baseType)
+            return rti;
+          return A._Universe__lookupFutureOrRti(universe, substitutedBaseType, true);
+        case 9:
+          interfaceTypeArguments = rti._rest;
+          substitutedInterfaceTypeArguments = A._substituteArray(universe, interfaceTypeArguments, typeArguments, depth);
+          if (substitutedInterfaceTypeArguments === interfaceTypeArguments)
+            return rti;
+          return A._Universe__lookupInterfaceRti(universe, rti._primary, substitutedInterfaceTypeArguments);
+        case 10:
+          base = rti._primary;
+          substitutedBase = A._substitute(universe, base, typeArguments, depth);
+          $arguments = rti._rest;
+          substitutedArguments = A._substituteArray(universe, $arguments, typeArguments, depth);
+          if (substitutedBase === base && substitutedArguments === $arguments)
+            return rti;
+          return A._Universe__lookupBindingRti(universe, substitutedBase, substitutedArguments);
+        case 11:
+          t1 = rti._primary;
+          fields = rti._rest;
+          substitutedFields = A._substituteArray(universe, fields, typeArguments, depth);
+          if (substitutedFields === fields)
+            return rti;
+          return A._Universe__lookupRecordRti(universe, t1, substitutedFields);
+        case 12:
+          returnType = rti._primary;
+          substitutedReturnType = A._substitute(universe, returnType, typeArguments, depth);
+          functionParameters = rti._rest;
+          substitutedFunctionParameters = A._substituteFunctionParameters(universe, functionParameters, typeArguments, depth);
+          if (substitutedReturnType === returnType && substitutedFunctionParameters === functionParameters)
+            return rti;
+          return A._Universe__lookupFunctionRti(universe, substitutedReturnType, substitutedFunctionParameters);
+        case 13:
+          bounds = rti._rest;
+          depth += bounds.length;
+          substitutedBounds = A._substituteArray(universe, bounds, typeArguments, depth);
+          base = rti._primary;
+          substitutedBase = A._substitute(universe, base, typeArguments, depth);
+          if (substitutedBounds === bounds && substitutedBase === base)
+            return rti;
+          return A._Universe__lookupGenericFunctionRti(universe, substitutedBase, substitutedBounds, true);
+        case 14:
+          index = rti._primary;
+          if (index < depth)
+            return rti;
+          argument = typeArguments[index - depth];
+          if (argument == null)
+            return rti;
+          return argument;
+        default:
+          throw A.wrapException(A.AssertionError$("Attempted to substitute unexpected RTI kind " + kind));
+      }
+    },
+    _substituteArray(universe, rtiArray, typeArguments, depth) {
+      var changed, i, rti, substitutedRti,
+        $length = rtiArray.length,
+        result = A._Utils_newArrayOrEmpty($length);
+      for (changed = false, i = 0; i < $length; ++i) {
+        rti = rtiArray[i];
+        substitutedRti = A._substitute(universe, rti, typeArguments, depth);
+        if (substitutedRti !== rti)
+          changed = true;
+        result[i] = substitutedRti;
+      }
+      return changed ? result : rtiArray;
+    },
+    _substituteNamed(universe, namedArray, typeArguments, depth) {
+      var changed, i, t1, t2, rti, substitutedRti,
+        $length = namedArray.length,
+        result = A._Utils_newArrayOrEmpty($length);
+      for (changed = false, i = 0; i < $length; i += 3) {
+        t1 = namedArray[i];
+        t2 = namedArray[i + 1];
+        rti = namedArray[i + 2];
+        substitutedRti = A._substitute(universe, rti, typeArguments, depth);
+        if (substitutedRti !== rti)
+          changed = true;
+        result.splice(i, 3, t1, t2, substitutedRti);
+      }
+      return changed ? result : namedArray;
+    },
+    _substituteFunctionParameters(universe, functionParameters, typeArguments, depth) {
+      var result,
+        requiredPositional = functionParameters._requiredPositional,
+        substitutedRequiredPositional = A._substituteArray(universe, requiredPositional, typeArguments, depth),
+        optionalPositional = functionParameters._optionalPositional,
+        substitutedOptionalPositional = A._substituteArray(universe, optionalPositional, typeArguments, depth),
+        named = functionParameters._named,
+        substitutedNamed = A._substituteNamed(universe, named, typeArguments, depth);
+      if (substitutedRequiredPositional === requiredPositional && substitutedOptionalPositional === optionalPositional && substitutedNamed === named)
+        return functionParameters;
+      result = new A._FunctionParameters();
+      result._requiredPositional = substitutedRequiredPositional;
+      result._optionalPositional = substitutedOptionalPositional;
+      result._named = substitutedNamed;
+      return result;
+    },
+    _setArrayType(target, rti) {
+      target[init.arrayRti] = rti;
+      return target;
+    },
+    closureFunctionType(closure) {
+      var signature = closure.$signature;
+      if (signature != null) {
+        if (typeof signature == "number")
+          return A.getTypeFromTypesTable(signature);
+        return closure.$signature();
+      }
+      return null;
+    },
+    instanceOrFunctionType(object, testRti) {
+      var rti;
+      if (A.Rti__isUnionOfFunctionType(testRti))
+        if (object instanceof A.Closure) {
+          rti = A.closureFunctionType(object);
+          if (rti != null)
+            return rti;
+        }
+      return A.instanceType(object);
+    },
+    instanceType(object) {
+      if (object instanceof A.Object)
+        return A._instanceType(object);
+      if (Array.isArray(object))
+        return A._arrayInstanceType(object);
+      return A._instanceTypeFromConstructor(J.getInterceptor$(object));
+    },
+    _arrayInstanceType(object) {
+      var rti = object[init.arrayRti],
+        defaultRti = type$.JSArray_dynamic;
+      if (rti == null)
+        return defaultRti;
+      if (rti.constructor !== defaultRti.constructor)
+        return defaultRti;
+      return rti;
+    },
+    _instanceType(object) {
+      var rti = object.$ti;
+      return rti != null ? rti : A._instanceTypeFromConstructor(object);
+    },
+    _instanceTypeFromConstructor(instance) {
+      var $constructor = instance.constructor,
+        probe = $constructor.$ccache;
+      if (probe != null)
+        return probe;
+      return A._instanceTypeFromConstructorMiss(instance, $constructor);
+    },
+    _instanceTypeFromConstructorMiss(instance, $constructor) {
+      var effectiveConstructor = instance instanceof A.Closure ? Object.getPrototypeOf(Object.getPrototypeOf(instance)).constructor : $constructor,
+        rti = A._Universe_findErasedType(init.typeUniverse, effectiveConstructor.name);
+      $constructor.$ccache = rti;
+      return rti;
+    },
+    getTypeFromTypesTable(index) {
+      var rti,
+        table = init.types,
+        type = table[index];
+      if (typeof type == "string") {
+        rti = A._Universe_eval(init.typeUniverse, type, false);
+        table[index] = rti;
+        return rti;
+      }
+      return type;
+    },
+    getRuntimeTypeOfDartObject(object) {
+      return A.createRuntimeType(A._instanceType(object));
+    },
+    _structuralTypeOf(object) {
+      var functionRti = object instanceof A.Closure ? A.closureFunctionType(object) : null;
+      if (functionRti != null)
+        return functionRti;
+      if (type$.TrustedGetRuntimeType._is(object))
+        return J.get$runtimeType$(object)._rti;
+      if (Array.isArray(object))
+        return A._arrayInstanceType(object);
+      return A.instanceType(object);
+    },
+    createRuntimeType(rti) {
+      var t1 = rti._cachedRuntimeType;
+      return t1 == null ? rti._cachedRuntimeType = A._createRuntimeType(rti) : t1;
+    },
+    _createRuntimeType(rti) {
+      var starErasedRti, t1,
+        s = rti._canonicalRecipe,
+        starErasedRecipe = s.replace(/\*/g, "");
+      if (starErasedRecipe === s)
+        return rti._cachedRuntimeType = new A._Type(rti);
+      starErasedRti = A._Universe_eval(init.typeUniverse, starErasedRecipe, true);
+      t1 = starErasedRti._cachedRuntimeType;
+      return t1 == null ? starErasedRti._cachedRuntimeType = A._createRuntimeType(starErasedRti) : t1;
+    },
+    typeLiteral(recipe) {
+      return A.createRuntimeType(A._Universe_eval(init.typeUniverse, recipe, false));
+    },
+    _installSpecializedIsTest(object) {
+      var t1, unstarred, unstarredKind, isFn, $name, predicate, testRti = this;
+      if (testRti === type$.Object)
+        return A._finishIsFn(testRti, object, A._isObject);
+      if (!A.isSoundTopType(testRti))
+        t1 = testRti === type$.legacy_Object;
+      else
+        t1 = true;
+      if (t1)
+        return A._finishIsFn(testRti, object, A._isTop);
+      t1 = testRti._kind;
+      if (t1 === 7)
+        return A._finishIsFn(testRti, object, A._generalNullableIsTestImplementation);
+      if (t1 === 1)
+        return A._finishIsFn(testRti, object, A._isNever);
+      unstarred = t1 === 6 ? testRti._primary : testRti;
+      unstarredKind = unstarred._kind;
+      if (unstarredKind === 8)
+        return A._finishIsFn(testRti, object, A._isFutureOr);
+      if (unstarred === type$.int)
+        isFn = A._isInt;
+      else if (unstarred === type$.double || unstarred === type$.num)
+        isFn = A._isNum;
+      else if (unstarred === type$.String)
+        isFn = A._isString;
+      else
+        isFn = unstarred === type$.bool ? A._isBool : null;
+      if (isFn != null)
+        return A._finishIsFn(testRti, object, isFn);
+      if (unstarredKind === 9) {
+        $name = unstarred._primary;
+        if (unstarred._rest.every(A.isDefinitelyTopType)) {
+          testRti._specializedTestResource = "$is" + $name;
+          if ($name === "List")
+            return A._finishIsFn(testRti, object, A._isListTestViaProperty);
+          return A._finishIsFn(testRti, object, A._isTestViaProperty);
+        }
+      } else if (unstarredKind === 11) {
+        predicate = A.createRecordTypePredicate(unstarred._primary, unstarred._rest);
+        return A._finishIsFn(testRti, object, predicate == null ? A._isNever : predicate);
+      }
+      return A._finishIsFn(testRti, object, A._generalIsTestImplementation);
+    },
+    _finishIsFn(testRti, object, isFn) {
+      testRti._is = isFn;
+      return testRti._is(object);
+    },
+    _installSpecializedAsCheck(object) {
+      var t1, testRti = this,
+        asFn = A._generalAsCheckImplementation;
+      if (!A.isSoundTopType(testRti))
+        t1 = testRti === type$.legacy_Object;
+      else
+        t1 = true;
+      if (t1)
+        asFn = A._asTop;
+      else if (testRti === type$.Object)
+        asFn = A._asObject;
+      else {
+        t1 = A.isNullable(testRti);
+        if (t1)
+          asFn = A._generalNullableAsCheckImplementation;
+      }
+      testRti._as = asFn;
+      return testRti._as(object);
+    },
+    _nullIs(testRti) {
+      var kind = testRti._kind,
+        t1 = true;
+      if (!A.isSoundTopType(testRti))
+        if (!(testRti === type$.legacy_Object))
+          if (!(testRti === type$.legacy_Never))
+            if (kind !== 7)
+              if (!(kind === 6 && A._nullIs(testRti._primary)))
+                t1 = kind === 8 && A._nullIs(testRti._primary) || testRti === type$.Null || testRti === type$.JSNull;
+      return t1;
+    },
+    _generalIsTestImplementation(object) {
+      var testRti = this;
+      if (object == null)
+        return A._nullIs(testRti);
+      return A.isSubtype(init.typeUniverse, A.instanceOrFunctionType(object, testRti), testRti);
+    },
+    _generalNullableIsTestImplementation(object) {
+      if (object == null)
+        return true;
+      return this._primary._is(object);
+    },
+    _isTestViaProperty(object) {
+      var tag, testRti = this;
+      if (object == null)
+        return A._nullIs(testRti);
+      tag = testRti._specializedTestResource;
+      if (object instanceof A.Object)
+        return !!object[tag];
+      return !!J.getInterceptor$(object)[tag];
+    },
+    _isListTestViaProperty(object) {
+      var tag, testRti = this;
+      if (object == null)
+        return A._nullIs(testRti);
+      if (typeof object != "object")
+        return false;
+      if (Array.isArray(object))
+        return true;
+      tag = testRti._specializedTestResource;
+      if (object instanceof A.Object)
+        return !!object[tag];
+      return !!J.getInterceptor$(object)[tag];
+    },
+    _generalAsCheckImplementation(object) {
+      var testRti = this;
+      if (object == null) {
+        if (A.isNullable(testRti))
+          return object;
+      } else if (testRti._is(object))
+        return object;
+      A._failedAsCheck(object, testRti);
+    },
+    _generalNullableAsCheckImplementation(object) {
+      var testRti = this;
+      if (object == null)
+        return object;
+      else if (testRti._is(object))
+        return object;
+      A._failedAsCheck(object, testRti);
+    },
+    _failedAsCheck(object, testRti) {
+      throw A.wrapException(A._TypeError$fromMessage(A._Error_compose(object, A._rtiToString(testRti, null))));
+    },
+    _Error_compose(object, checkedTypeDescription) {
+      return A.Error_safeToString(object) + ": type '" + A._rtiToString(A._structuralTypeOf(object), null) + "' is not a subtype of type '" + checkedTypeDescription + "'";
+    },
+    _TypeError$fromMessage(message) {
+      return new A._TypeError("TypeError: " + message);
+    },
+    _TypeError__TypeError$forType(object, type) {
+      return new A._TypeError("TypeError: " + A._Error_compose(object, type));
+    },
+    _isFutureOr(object) {
+      var testRti = this,
+        unstarred = testRti._kind === 6 ? testRti._primary : testRti;
+      return unstarred._primary._is(object) || A.Rti__getFutureFromFutureOr(init.typeUniverse, unstarred)._is(object);
+    },
+    _isObject(object) {
+      return object != null;
+    },
+    _asObject(object) {
+      if (object != null)
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "Object"));
+    },
+    _isTop(object) {
+      return true;
+    },
+    _asTop(object) {
+      return object;
+    },
+    _isNever(object) {
+      return false;
+    },
+    _isBool(object) {
+      return true === object || false === object;
+    },
+    _asBool(object) {
+      if (true === object)
+        return true;
+      if (false === object)
+        return false;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "bool"));
+    },
+    _asBoolS(object) {
+      if (true === object)
+        return true;
+      if (false === object)
+        return false;
+      if (object == null)
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "bool"));
+    },
+    _asBoolQ(object) {
+      if (true === object)
+        return true;
+      if (false === object)
+        return false;
+      if (object == null)
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "bool?"));
+    },
+    _asDouble(object) {
+      if (typeof object == "number")
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "double"));
+    },
+    _asDoubleS(object) {
+      if (typeof object == "number")
+        return object;
+      if (object == null)
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "double"));
+    },
+    _asDoubleQ(object) {
+      if (typeof object == "number")
+        return object;
+      if (object == null)
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "double?"));
+    },
+    _isInt(object) {
+      return typeof object == "number" && Math.floor(object) === object;
+    },
+    _asInt(object) {
+      if (typeof object == "number" && Math.floor(object) === object)
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "int"));
+    },
+    _asIntS(object) {
+      if (typeof object == "number" && Math.floor(object) === object)
+        return object;
+      if (object == null)
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "int"));
+    },
+    _asIntQ(object) {
+      if (typeof object == "number" && Math.floor(object) === object)
+        return object;
+      if (object == null)
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "int?"));
+    },
+    _isNum(object) {
+      return typeof object == "number";
+    },
+    _asNum(object) {
+      if (typeof object == "number")
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "num"));
+    },
+    _asNumS(object) {
+      if (typeof object == "number")
+        return object;
+      if (object == null)
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "num"));
+    },
+    _asNumQ(object) {
+      if (typeof object == "number")
+        return object;
+      if (object == null)
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "num?"));
+    },
+    _isString(object) {
+      return typeof object == "string";
+    },
+    _asString(object) {
+      if (typeof object == "string")
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "String"));
+    },
+    _asStringS(object) {
+      if (typeof object == "string")
+        return object;
+      if (object == null)
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "String"));
+    },
+    _asStringQ(object) {
+      if (typeof object == "string")
+        return object;
+      if (object == null)
+        return object;
+      throw A.wrapException(A._TypeError__TypeError$forType(object, "String?"));
+    },
+    _rtiArrayToString(array, genericContext) {
+      var s, sep, i;
+      for (s = "", sep = "", i = 0; i < array.length; ++i, sep = ", ")
+        s += sep + A._rtiToString(array[i], genericContext);
+      return s;
+    },
+    _recordRtiToString(recordType, genericContext) {
+      var fieldCount, names, namesIndex, s, comma, i,
+        partialShape = recordType._primary,
+        fields = recordType._rest;
+      if ("" === partialShape)
+        return "(" + A._rtiArrayToString(fields, genericContext) + ")";
+      fieldCount = fields.length;
+      names = partialShape.split(",");
+      namesIndex = names.length - fieldCount;
+      for (s = "(", comma = "", i = 0; i < fieldCount; ++i, comma = ", ") {
+        s += comma;
+        if (namesIndex === 0)
+          s += "{";
+        s += A._rtiToString(fields[i], genericContext);
+        if (namesIndex >= 0)
+          s += " " + names[namesIndex];
+        ++namesIndex;
+      }
+      return s + "})";
+    },
+    _functionRtiToString(functionType, genericContext, bounds) {
+      var boundsLength, offset, i, t1, t2, typeParametersText, typeSep, t3, t4, boundRti, kind, parameters, requiredPositional, requiredPositionalLength, optionalPositional, optionalPositionalLength, named, namedLength, returnTypeText, argumentsText, sep, _s2_ = ", ", outerContextLength = null;
+      if (bounds != null) {
+        boundsLength = bounds.length;
+        if (genericContext == null)
+          genericContext = A._setArrayType([], type$.JSArray_String);
+        else
+          outerContextLength = genericContext.length;
+        offset = genericContext.length;
+        for (i = boundsLength; i > 0; --i)
+          B.JSArray_methods.add$1(genericContext, "T" + (offset + i));
+        for (t1 = type$.nullable_Object, t2 = type$.legacy_Object, typeParametersText = "<", typeSep = "", i = 0; i < boundsLength; ++i, typeSep = _s2_) {
+          t3 = genericContext.length;
+          t4 = t3 - 1 - i;
+          if (!(t4 >= 0))
+            return A.ioore(genericContext, t4);
+          typeParametersText = B.JSString_methods.$add(typeParametersText + typeSep, genericContext[t4]);
+          boundRti = bounds[i];
+          kind = boundRti._kind;
+          if (!(kind === 2 || kind === 3 || kind === 4 || kind === 5 || boundRti === t1))
+            t3 = boundRti === t2;
+          else
+            t3 = true;
+          if (!t3)
+            typeParametersText += " extends " + A._rtiToString(boundRti, genericContext);
+        }
+        typeParametersText += ">";
+      } else
+        typeParametersText = "";
+      t1 = functionType._primary;
+      parameters = functionType._rest;
+      requiredPositional = parameters._requiredPositional;
+      requiredPositionalLength = requiredPositional.length;
+      optionalPositional = parameters._optionalPositional;
+      optionalPositionalLength = optionalPositional.length;
+      named = parameters._named;
+      namedLength = named.length;
+      returnTypeText = A._rtiToString(t1, genericContext);
+      for (argumentsText = "", sep = "", i = 0; i < requiredPositionalLength; ++i, sep = _s2_)
+        argumentsText += sep + A._rtiToString(requiredPositional[i], genericContext);
+      if (optionalPositionalLength > 0) {
+        argumentsText += sep + "[";
+        for (sep = "", i = 0; i < optionalPositionalLength; ++i, sep = _s2_)
+          argumentsText += sep + A._rtiToString(optionalPositional[i], genericContext);
+        argumentsText += "]";
+      }
+      if (namedLength > 0) {
+        argumentsText += sep + "{";
+        for (sep = "", i = 0; i < namedLength; i += 3, sep = _s2_) {
+          argumentsText += sep;
+          if (named[i + 1])
+            argumentsText += "required ";
+          argumentsText += A._rtiToString(named[i + 2], genericContext) + " " + named[i];
+        }
+        argumentsText += "}";
+      }
+      if (outerContextLength != null) {
+        genericContext.toString;
+        genericContext.length = outerContextLength;
+      }
+      return typeParametersText + "(" + argumentsText + ") => " + returnTypeText;
+    },
+    _rtiToString(rti, genericContext) {
+      var questionArgument, s, argumentKind, $name, $arguments, t1, t2,
+        kind = rti._kind;
+      if (kind === 5)
+        return "erased";
+      if (kind === 2)
+        return "dynamic";
+      if (kind === 3)
+        return "void";
+      if (kind === 1)
+        return "Never";
+      if (kind === 4)
+        return "any";
+      if (kind === 6)
+        return A._rtiToString(rti._primary, genericContext);
+      if (kind === 7) {
+        questionArgument = rti._primary;
+        s = A._rtiToString(questionArgument, genericContext);
+        argumentKind = questionArgument._kind;
+        return (argumentKind === 12 || argumentKind === 13 ? "(" + s + ")" : s) + "?";
+      }
+      if (kind === 8)
+        return "FutureOr<" + A._rtiToString(rti._primary, genericContext) + ">";
+      if (kind === 9) {
+        $name = A._unminifyOrTag(rti._primary);
+        $arguments = rti._rest;
+        return $arguments.length > 0 ? $name + ("<" + A._rtiArrayToString($arguments, genericContext) + ">") : $name;
+      }
+      if (kind === 11)
+        return A._recordRtiToString(rti, genericContext);
+      if (kind === 12)
+        return A._functionRtiToString(rti, genericContext, null);
+      if (kind === 13)
+        return A._functionRtiToString(rti._primary, genericContext, rti._rest);
+      if (kind === 14) {
+        t1 = rti._primary;
+        t2 = genericContext.length;
+        t1 = t2 - 1 - t1;
+        if (!(t1 >= 0 && t1 < t2))
+          return A.ioore(genericContext, t1);
+        return genericContext[t1];
+      }
+      return "?";
+    },
+    _unminifyOrTag(rawClassName) {
+      var preserved = init.mangledGlobalNames[rawClassName];
+      if (preserved != null)
+        return preserved;
+      return rawClassName;
+    },
+    _Universe_findRule(universe, targetType) {
+      var rule = universe.tR[targetType];
+      for (; typeof rule == "string";)
+        rule = universe.tR[rule];
+      return rule;
+    },
+    _Universe_findErasedType(universe, cls) {
+      var $length, erased, $arguments, i, $interface,
+        t1 = universe.eT,
+        probe = t1[cls];
+      if (probe == null)
+        return A._Universe_eval(universe, cls, false);
+      else if (typeof probe == "number") {
+        $length = probe;
+        erased = A._Universe__lookupTerminalRti(universe, 5, "#");
+        $arguments = A._Utils_newArrayOrEmpty($length);
+        for (i = 0; i < $length; ++i)
+          $arguments[i] = erased;
+        $interface = A._Universe__lookupInterfaceRti(universe, cls, $arguments);
+        t1[cls] = $interface;
+        return $interface;
+      } else
+        return probe;
+    },
     _Universe_addRules(universe, rules) {
       return A._Utils_objectAssign(universe.tR, rules);
     },
     _Universe_addErasedTypes(universe, types) {
       return A._Utils_objectAssign(universe.eT, types);
+    },
+    _Universe_eval(universe, recipe, normalize) {
+      var rti,
+        t1 = universe.eC,
+        probe = t1.get(recipe);
+      if (probe != null)
+        return probe;
+      rti = A._Parser_parse(A._Parser_create(universe, null, recipe, normalize));
+      t1.set(recipe, rti);
+      return rti;
+    },
+    _Universe_evalInEnvironment(universe, environment, recipe) {
+      var probe, rti,
+        cache = environment._evalCache;
+      if (cache == null)
+        cache = environment._evalCache = new Map();
+      probe = cache.get(recipe);
+      if (probe != null)
+        return probe;
+      rti = A._Parser_parse(A._Parser_create(universe, environment, recipe, true));
+      cache.set(recipe, rti);
+      return rti;
+    },
+    _Universe_bind(universe, environment, argumentsRti) {
+      var argumentsRecipe, probe, rti,
+        cache = environment._bindCache;
+      if (cache == null)
+        cache = environment._bindCache = new Map();
+      argumentsRecipe = argumentsRti._canonicalRecipe;
+      probe = cache.get(argumentsRecipe);
+      if (probe != null)
+        return probe;
+      rti = A._Universe__lookupBindingRti(universe, environment, argumentsRti._kind === 10 ? argumentsRti._rest : [argumentsRti]);
+      cache.set(argumentsRecipe, rti);
+      return rti;
+    },
+    _Universe__installTypeTests(universe, rti) {
+      rti._as = A._installSpecializedAsCheck;
+      rti._is = A._installSpecializedIsTest;
+      return rti;
+    },
+    _Universe__lookupTerminalRti(universe, kind, key) {
+      var rti, t1,
+        probe = universe.eC.get(key);
+      if (probe != null)
+        return probe;
+      rti = new A.Rti(null, null);
+      rti._kind = kind;
+      rti._canonicalRecipe = key;
+      t1 = A._Universe__installTypeTests(universe, rti);
+      universe.eC.set(key, t1);
+      return t1;
+    },
+    _Universe__lookupStarRti(universe, baseType, normalize) {
+      var t1,
+        key = baseType._canonicalRecipe + "*",
+        probe = universe.eC.get(key);
+      if (probe != null)
+        return probe;
+      t1 = A._Universe__createStarRti(universe, baseType, key, normalize);
+      universe.eC.set(key, t1);
+      return t1;
+    },
+    _Universe__createStarRti(universe, baseType, key, normalize) {
+      var baseKind, t1, rti;
+      if (normalize) {
+        baseKind = baseType._kind;
+        if (!A.isSoundTopType(baseType))
+          t1 = baseType === type$.Null || baseType === type$.JSNull || baseKind === 7 || baseKind === 6;
+        else
+          t1 = true;
+        if (t1)
+          return baseType;
+      }
+      rti = new A.Rti(null, null);
+      rti._kind = 6;
+      rti._primary = baseType;
+      rti._canonicalRecipe = key;
+      return A._Universe__installTypeTests(universe, rti);
+    },
+    _Universe__lookupQuestionRti(universe, baseType, normalize) {
+      var t1,
+        key = baseType._canonicalRecipe + "?",
+        probe = universe.eC.get(key);
+      if (probe != null)
+        return probe;
+      t1 = A._Universe__createQuestionRti(universe, baseType, key, normalize);
+      universe.eC.set(key, t1);
+      return t1;
+    },
+    _Universe__createQuestionRti(universe, baseType, key, normalize) {
+      var baseKind, t1, starArgument, rti;
+      if (normalize) {
+        baseKind = baseType._kind;
+        t1 = true;
+        if (!A.isSoundTopType(baseType))
+          if (!(baseType === type$.Null || baseType === type$.JSNull))
+            if (baseKind !== 7)
+              t1 = baseKind === 8 && A.isNullable(baseType._primary);
+        if (t1)
+          return baseType;
+        else if (baseKind === 1 || baseType === type$.legacy_Never)
+          return type$.Null;
+        else if (baseKind === 6) {
+          starArgument = baseType._primary;
+          if (starArgument._kind === 8 && A.isNullable(starArgument._primary))
+            return starArgument;
+          else
+            return A.Rti__getQuestionFromStar(universe, baseType);
+        }
+      }
+      rti = new A.Rti(null, null);
+      rti._kind = 7;
+      rti._primary = baseType;
+      rti._canonicalRecipe = key;
+      return A._Universe__installTypeTests(universe, rti);
+    },
+    _Universe__lookupFutureOrRti(universe, baseType, normalize) {
+      var t1,
+        key = baseType._canonicalRecipe + "/",
+        probe = universe.eC.get(key);
+      if (probe != null)
+        return probe;
+      t1 = A._Universe__createFutureOrRti(universe, baseType, key, normalize);
+      universe.eC.set(key, t1);
+      return t1;
+    },
+    _Universe__createFutureOrRti(universe, baseType, key, normalize) {
+      var t1, rti;
+      if (normalize) {
+        t1 = baseType._kind;
+        if (A.isSoundTopType(baseType) || baseType === type$.Object || baseType === type$.legacy_Object)
+          return baseType;
+        else if (t1 === 1)
+          return A._Universe__lookupInterfaceRti(universe, "Future", [baseType]);
+        else if (baseType === type$.Null || baseType === type$.JSNull)
+          return type$.nullable_Future_Null;
+      }
+      rti = new A.Rti(null, null);
+      rti._kind = 8;
+      rti._primary = baseType;
+      rti._canonicalRecipe = key;
+      return A._Universe__installTypeTests(universe, rti);
+    },
+    _Universe__lookupGenericFunctionParameterRti(universe, index) {
+      var rti, t1,
+        key = "" + index + "^",
+        probe = universe.eC.get(key);
+      if (probe != null)
+        return probe;
+      rti = new A.Rti(null, null);
+      rti._kind = 14;
+      rti._primary = index;
+      rti._canonicalRecipe = key;
+      t1 = A._Universe__installTypeTests(universe, rti);
+      universe.eC.set(key, t1);
+      return t1;
+    },
+    _Universe__canonicalRecipeJoin($arguments) {
+      var s, sep, i,
+        $length = $arguments.length;
+      for (s = "", sep = "", i = 0; i < $length; ++i, sep = ",")
+        s += sep + $arguments[i]._canonicalRecipe;
+      return s;
+    },
+    _Universe__canonicalRecipeJoinNamed($arguments) {
+      var s, sep, i, t1, nameSep,
+        $length = $arguments.length;
+      for (s = "", sep = "", i = 0; i < $length; i += 3, sep = ",") {
+        t1 = $arguments[i];
+        nameSep = $arguments[i + 1] ? "!" : ":";
+        s += sep + t1 + nameSep + $arguments[i + 2]._canonicalRecipe;
+      }
+      return s;
+    },
+    _Universe__lookupInterfaceRti(universe, $name, $arguments) {
+      var probe, rti, t1,
+        s = $name;
+      if ($arguments.length > 0)
+        s += "<" + A._Universe__canonicalRecipeJoin($arguments) + ">";
+      probe = universe.eC.get(s);
+      if (probe != null)
+        return probe;
+      rti = new A.Rti(null, null);
+      rti._kind = 9;
+      rti._primary = $name;
+      rti._rest = $arguments;
+      if ($arguments.length > 0)
+        rti._precomputed1 = $arguments[0];
+      rti._canonicalRecipe = s;
+      t1 = A._Universe__installTypeTests(universe, rti);
+      universe.eC.set(s, t1);
+      return t1;
+    },
+    _Universe__lookupBindingRti(universe, base, $arguments) {
+      var newBase, newArguments, key, probe, rti, t1;
+      if (base._kind === 10) {
+        newBase = base._primary;
+        newArguments = base._rest.concat($arguments);
+      } else {
+        newArguments = $arguments;
+        newBase = base;
+      }
+      key = newBase._canonicalRecipe + (";<" + A._Universe__canonicalRecipeJoin(newArguments) + ">");
+      probe = universe.eC.get(key);
+      if (probe != null)
+        return probe;
+      rti = new A.Rti(null, null);
+      rti._kind = 10;
+      rti._primary = newBase;
+      rti._rest = newArguments;
+      rti._canonicalRecipe = key;
+      t1 = A._Universe__installTypeTests(universe, rti);
+      universe.eC.set(key, t1);
+      return t1;
+    },
+    _Universe__lookupRecordRti(universe, partialShapeTag, fields) {
+      var rti, t1,
+        key = "+" + (partialShapeTag + "(" + A._Universe__canonicalRecipeJoin(fields) + ")"),
+        probe = universe.eC.get(key);
+      if (probe != null)
+        return probe;
+      rti = new A.Rti(null, null);
+      rti._kind = 11;
+      rti._primary = partialShapeTag;
+      rti._rest = fields;
+      rti._canonicalRecipe = key;
+      t1 = A._Universe__installTypeTests(universe, rti);
+      universe.eC.set(key, t1);
+      return t1;
+    },
+    _Universe__lookupFunctionRti(universe, returnType, parameters) {
+      var sep, key, probe, rti, t1,
+        s = returnType._canonicalRecipe,
+        requiredPositional = parameters._requiredPositional,
+        requiredPositionalLength = requiredPositional.length,
+        optionalPositional = parameters._optionalPositional,
+        optionalPositionalLength = optionalPositional.length,
+        named = parameters._named,
+        namedLength = named.length,
+        recipe = "(" + A._Universe__canonicalRecipeJoin(requiredPositional);
+      if (optionalPositionalLength > 0) {
+        sep = requiredPositionalLength > 0 ? "," : "";
+        recipe += sep + "[" + A._Universe__canonicalRecipeJoin(optionalPositional) + "]";
+      }
+      if (namedLength > 0) {
+        sep = requiredPositionalLength > 0 ? "," : "";
+        recipe += sep + "{" + A._Universe__canonicalRecipeJoinNamed(named) + "}";
+      }
+      key = s + (recipe + ")");
+      probe = universe.eC.get(key);
+      if (probe != null)
+        return probe;
+      rti = new A.Rti(null, null);
+      rti._kind = 12;
+      rti._primary = returnType;
+      rti._rest = parameters;
+      rti._canonicalRecipe = key;
+      t1 = A._Universe__installTypeTests(universe, rti);
+      universe.eC.set(key, t1);
+      return t1;
+    },
+    _Universe__lookupGenericFunctionRti(universe, baseFunctionType, bounds, normalize) {
+      var t1,
+        key = baseFunctionType._canonicalRecipe + ("<" + A._Universe__canonicalRecipeJoin(bounds) + ">"),
+        probe = universe.eC.get(key);
+      if (probe != null)
+        return probe;
+      t1 = A._Universe__createGenericFunctionRti(universe, baseFunctionType, bounds, key, normalize);
+      universe.eC.set(key, t1);
+      return t1;
+    },
+    _Universe__createGenericFunctionRti(universe, baseFunctionType, bounds, key, normalize) {
+      var $length, typeArguments, count, i, bound, substitutedBase, substitutedBounds, rti;
+      if (normalize) {
+        $length = bounds.length;
+        typeArguments = A._Utils_newArrayOrEmpty($length);
+        for (count = 0, i = 0; i < $length; ++i) {
+          bound = bounds[i];
+          if (bound._kind === 1) {
+            typeArguments[i] = bound;
+            ++count;
+          }
+        }
+        if (count > 0) {
+          substitutedBase = A._substitute(universe, baseFunctionType, typeArguments, 0);
+          substitutedBounds = A._substituteArray(universe, bounds, typeArguments, 0);
+          return A._Universe__lookupGenericFunctionRti(universe, substitutedBase, substitutedBounds, bounds !== substitutedBounds);
+        }
+      }
+      rti = new A.Rti(null, null);
+      rti._kind = 13;
+      rti._primary = baseFunctionType;
+      rti._rest = bounds;
+      rti._canonicalRecipe = key;
+      return A._Universe__installTypeTests(universe, rti);
+    },
+    _Parser_create(universe, environment, recipe, normalize) {
+      return {u: universe, e: environment, r: recipe, s: [], p: 0, n: normalize};
+    },
+    _Parser_parse(parser) {
+      var t2, i, ch, t3, array, end, item,
+        source = parser.r,
+        t1 = parser.s;
+      for (t2 = source.length, i = 0; i < t2;) {
+        ch = source.charCodeAt(i);
+        if (ch >= 48 && ch <= 57)
+          i = A._Parser_handleDigit(i + 1, ch, source, t1);
+        else if ((((ch | 32) >>> 0) - 97 & 65535) < 26 || ch === 95 || ch === 36 || ch === 124)
+          i = A._Parser_handleIdentifier(parser, i, source, t1, false);
+        else if (ch === 46)
+          i = A._Parser_handleIdentifier(parser, i, source, t1, true);
+        else {
+          ++i;
+          switch (ch) {
+            case 44:
+              break;
+            case 58:
+              t1.push(false);
+              break;
+            case 33:
+              t1.push(true);
+              break;
+            case 59:
+              t1.push(A._Parser_toType(parser.u, parser.e, t1.pop()));
+              break;
+            case 94:
+              t1.push(A._Universe__lookupGenericFunctionParameterRti(parser.u, t1.pop()));
+              break;
+            case 35:
+              t1.push(A._Universe__lookupTerminalRti(parser.u, 5, "#"));
+              break;
+            case 64:
+              t1.push(A._Universe__lookupTerminalRti(parser.u, 2, "@"));
+              break;
+            case 126:
+              t1.push(A._Universe__lookupTerminalRti(parser.u, 3, "~"));
+              break;
+            case 60:
+              t1.push(parser.p);
+              parser.p = t1.length;
+              break;
+            case 62:
+              A._Parser_handleTypeArguments(parser, t1);
+              break;
+            case 38:
+              A._Parser_handleExtendedOperations(parser, t1);
+              break;
+            case 42:
+              t3 = parser.u;
+              t1.push(A._Universe__lookupStarRti(t3, A._Parser_toType(t3, parser.e, t1.pop()), parser.n));
+              break;
+            case 63:
+              t3 = parser.u;
+              t1.push(A._Universe__lookupQuestionRti(t3, A._Parser_toType(t3, parser.e, t1.pop()), parser.n));
+              break;
+            case 47:
+              t3 = parser.u;
+              t1.push(A._Universe__lookupFutureOrRti(t3, A._Parser_toType(t3, parser.e, t1.pop()), parser.n));
+              break;
+            case 40:
+              t1.push(-3);
+              t1.push(parser.p);
+              parser.p = t1.length;
+              break;
+            case 41:
+              A._Parser_handleArguments(parser, t1);
+              break;
+            case 91:
+              t1.push(parser.p);
+              parser.p = t1.length;
+              break;
+            case 93:
+              array = t1.splice(parser.p);
+              A._Parser_toTypes(parser.u, parser.e, array);
+              parser.p = t1.pop();
+              t1.push(array);
+              t1.push(-1);
+              break;
+            case 123:
+              t1.push(parser.p);
+              parser.p = t1.length;
+              break;
+            case 125:
+              array = t1.splice(parser.p);
+              A._Parser_toTypesNamed(parser.u, parser.e, array);
+              parser.p = t1.pop();
+              t1.push(array);
+              t1.push(-2);
+              break;
+            case 43:
+              end = source.indexOf("(", i);
+              t1.push(source.substring(i, end));
+              t1.push(-4);
+              t1.push(parser.p);
+              parser.p = t1.length;
+              i = end + 1;
+              break;
+            default:
+              throw "Bad character " + ch;
+          }
+        }
+      }
+      item = t1.pop();
+      return A._Parser_toType(parser.u, parser.e, item);
+    },
+    _Parser_handleDigit(i, digit, source, stack) {
+      var t1, ch,
+        value = digit - 48;
+      for (t1 = source.length; i < t1; ++i) {
+        ch = source.charCodeAt(i);
+        if (!(ch >= 48 && ch <= 57))
+          break;
+        value = value * 10 + (ch - 48);
+      }
+      stack.push(value);
+      return i;
+    },
+    _Parser_handleIdentifier(parser, start, source, stack, hasPeriod) {
+      var t1, ch, t2, string, environment, recipe,
+        i = start + 1;
+      for (t1 = source.length; i < t1; ++i) {
+        ch = source.charCodeAt(i);
+        if (ch === 46) {
+          if (hasPeriod)
+            break;
+          hasPeriod = true;
+        } else {
+          if (!((((ch | 32) >>> 0) - 97 & 65535) < 26 || ch === 95 || ch === 36 || ch === 124))
+            t2 = ch >= 48 && ch <= 57;
+          else
+            t2 = true;
+          if (!t2)
+            break;
+        }
+      }
+      string = source.substring(start, i);
+      if (hasPeriod) {
+        t1 = parser.u;
+        environment = parser.e;
+        if (environment._kind === 10)
+          environment = environment._primary;
+        recipe = A._Universe_findRule(t1, environment._primary)[string];
+        if (recipe == null)
+          A.throwExpression('No "' + string + '" in "' + A.Rti__getCanonicalRecipe(environment) + '"');
+        stack.push(A._Universe_evalInEnvironment(t1, environment, recipe));
+      } else
+        stack.push(string);
+      return i;
+    },
+    _Parser_handleTypeArguments(parser, stack) {
+      var base,
+        t1 = parser.u,
+        $arguments = A._Parser_collectArray(parser, stack),
+        head = stack.pop();
+      if (typeof head == "string")
+        stack.push(A._Universe__lookupInterfaceRti(t1, head, $arguments));
+      else {
+        base = A._Parser_toType(t1, parser.e, head);
+        switch (base._kind) {
+          case 12:
+            stack.push(A._Universe__lookupGenericFunctionRti(t1, base, $arguments, parser.n));
+            break;
+          default:
+            stack.push(A._Universe__lookupBindingRti(t1, base, $arguments));
+            break;
+        }
+      }
+    },
+    _Parser_handleArguments(parser, stack) {
+      var requiredPositional, returnType, parameters,
+        t1 = parser.u,
+        head = stack.pop(),
+        optionalPositional = null, named = null;
+      if (typeof head == "number")
+        switch (head) {
+          case -1:
+            optionalPositional = stack.pop();
+            break;
+          case -2:
+            named = stack.pop();
+            break;
+          default:
+            stack.push(head);
+            break;
+        }
+      else
+        stack.push(head);
+      requiredPositional = A._Parser_collectArray(parser, stack);
+      head = stack.pop();
+      switch (head) {
+        case -3:
+          head = stack.pop();
+          if (optionalPositional == null)
+            optionalPositional = t1.sEA;
+          if (named == null)
+            named = t1.sEA;
+          returnType = A._Parser_toType(t1, parser.e, head);
+          parameters = new A._FunctionParameters();
+          parameters._requiredPositional = requiredPositional;
+          parameters._optionalPositional = optionalPositional;
+          parameters._named = named;
+          stack.push(A._Universe__lookupFunctionRti(t1, returnType, parameters));
+          return;
+        case -4:
+          stack.push(A._Universe__lookupRecordRti(t1, stack.pop(), requiredPositional));
+          return;
+        default:
+          throw A.wrapException(A.AssertionError$("Unexpected state under `()`: " + A.S(head)));
+      }
+    },
+    _Parser_handleExtendedOperations(parser, stack) {
+      var $top = stack.pop();
+      if (0 === $top) {
+        stack.push(A._Universe__lookupTerminalRti(parser.u, 1, "0&"));
+        return;
+      }
+      if (1 === $top) {
+        stack.push(A._Universe__lookupTerminalRti(parser.u, 4, "1&"));
+        return;
+      }
+      throw A.wrapException(A.AssertionError$("Unexpected extended operation " + A.S($top)));
+    },
+    _Parser_collectArray(parser, stack) {
+      var array = stack.splice(parser.p);
+      A._Parser_toTypes(parser.u, parser.e, array);
+      parser.p = stack.pop();
+      return array;
+    },
+    _Parser_toType(universe, environment, item) {
+      if (typeof item == "string")
+        return A._Universe__lookupInterfaceRti(universe, item, universe.sEA);
+      else if (typeof item == "number") {
+        environment.toString;
+        return A._Parser_indexToType(universe, environment, item);
+      } else
+        return item;
+    },
+    _Parser_toTypes(universe, environment, items) {
+      var i,
+        $length = items.length;
+      for (i = 0; i < $length; ++i)
+        items[i] = A._Parser_toType(universe, environment, items[i]);
+    },
+    _Parser_toTypesNamed(universe, environment, items) {
+      var i,
+        $length = items.length;
+      for (i = 2; i < $length; i += 3)
+        items[i] = A._Parser_toType(universe, environment, items[i]);
+    },
+    _Parser_indexToType(universe, environment, index) {
+      var typeArguments, len,
+        kind = environment._kind;
+      if (kind === 10) {
+        if (index === 0)
+          return environment._primary;
+        typeArguments = environment._rest;
+        len = typeArguments.length;
+        if (index <= len)
+          return typeArguments[index - 1];
+        index -= len;
+        environment = environment._primary;
+        kind = environment._kind;
+      } else if (index === 0)
+        return environment;
+      if (kind !== 9)
+        throw A.wrapException(A.AssertionError$("Indexed base must be an interface type"));
+      typeArguments = environment._rest;
+      if (index <= typeArguments.length)
+        return typeArguments[index - 1];
+      throw A.wrapException(A.AssertionError$("Bad index " + index + " for " + environment.toString$0(0)));
+    },
+    isSubtype(universe, s, t) {
+      var result,
+        sCache = s._isSubtypeCache;
+      if (sCache == null)
+        sCache = s._isSubtypeCache = new Map();
+      result = sCache.get(t);
+      if (result == null) {
+        result = A._isSubtype(universe, s, null, t, null, false) ? 1 : 0;
+        sCache.set(t, result);
+      }
+      if (0 === result)
+        return false;
+      if (1 === result)
+        return true;
+      return true;
+    },
+    _isSubtype(universe, s, sEnv, t, tEnv, isLegacy) {
+      var t1, sKind, leftTypeVariable, tKind, t2, sBounds, tBounds, sLength, i, sBound, tBound;
+      if (s === t)
+        return true;
+      if (!A.isSoundTopType(t))
+        t1 = t === type$.legacy_Object;
+      else
+        t1 = true;
+      if (t1)
+        return true;
+      sKind = s._kind;
+      if (sKind === 4)
+        return true;
+      if (A.isSoundTopType(s))
+        return false;
+      t1 = s._kind;
+      if (t1 === 1)
+        return true;
+      leftTypeVariable = sKind === 14;
+      if (leftTypeVariable)
+        if (A._isSubtype(universe, sEnv[s._primary], sEnv, t, tEnv, false))
+          return true;
+      tKind = t._kind;
+      t1 = s === type$.Null || s === type$.JSNull;
+      if (t1) {
+        if (tKind === 8)
+          return A._isSubtype(universe, s, sEnv, t._primary, tEnv, false);
+        return t === type$.Null || t === type$.JSNull || tKind === 7 || tKind === 6;
+      }
+      if (t === type$.Object) {
+        if (sKind === 8)
+          return A._isSubtype(universe, s._primary, sEnv, t, tEnv, false);
+        if (sKind === 6)
+          return A._isSubtype(universe, s._primary, sEnv, t, tEnv, false);
+        return sKind !== 7;
+      }
+      if (sKind === 6)
+        return A._isSubtype(universe, s._primary, sEnv, t, tEnv, false);
+      if (tKind === 6) {
+        t1 = A.Rti__getQuestionFromStar(universe, t);
+        return A._isSubtype(universe, s, sEnv, t1, tEnv, false);
+      }
+      if (sKind === 8) {
+        if (!A._isSubtype(universe, s._primary, sEnv, t, tEnv, false))
+          return false;
+        return A._isSubtype(universe, A.Rti__getFutureFromFutureOr(universe, s), sEnv, t, tEnv, false);
+      }
+      if (sKind === 7) {
+        t1 = A._isSubtype(universe, type$.Null, sEnv, t, tEnv, false);
+        return t1 && A._isSubtype(universe, s._primary, sEnv, t, tEnv, false);
+      }
+      if (tKind === 8) {
+        if (A._isSubtype(universe, s, sEnv, t._primary, tEnv, false))
+          return true;
+        return A._isSubtype(universe, s, sEnv, A.Rti__getFutureFromFutureOr(universe, t), tEnv, false);
+      }
+      if (tKind === 7) {
+        t1 = A._isSubtype(universe, s, sEnv, type$.Null, tEnv, false);
+        return t1 || A._isSubtype(universe, s, sEnv, t._primary, tEnv, false);
+      }
+      if (leftTypeVariable)
+        return false;
+      t1 = sKind !== 12;
+      if ((!t1 || sKind === 13) && t === type$.Function)
+        return true;
+      t2 = sKind === 11;
+      if (t2 && t === type$.Record)
+        return true;
+      if (tKind === 13) {
+        if (s === type$.JavaScriptFunction)
+          return true;
+        if (sKind !== 13)
+          return false;
+        sBounds = s._rest;
+        tBounds = t._rest;
+        sLength = sBounds.length;
+        if (sLength !== tBounds.length)
+          return false;
+        sEnv = sEnv == null ? sBounds : sBounds.concat(sEnv);
+        tEnv = tEnv == null ? tBounds : tBounds.concat(tEnv);
+        for (i = 0; i < sLength; ++i) {
+          sBound = sBounds[i];
+          tBound = tBounds[i];
+          if (!A._isSubtype(universe, sBound, sEnv, tBound, tEnv, false) || !A._isSubtype(universe, tBound, tEnv, sBound, sEnv, false))
+            return false;
+        }
+        return A._isFunctionSubtype(universe, s._primary, sEnv, t._primary, tEnv, false);
+      }
+      if (tKind === 12) {
+        if (s === type$.JavaScriptFunction)
+          return true;
+        if (t1)
+          return false;
+        return A._isFunctionSubtype(universe, s, sEnv, t, tEnv, false);
+      }
+      if (sKind === 9) {
+        if (tKind !== 9)
+          return false;
+        return A._isInterfaceSubtype(universe, s, sEnv, t, tEnv, false);
+      }
+      if (t2 && tKind === 11)
+        return A._isRecordSubtype(universe, s, sEnv, t, tEnv, false);
+      return false;
+    },
+    _isFunctionSubtype(universe, s, sEnv, t, tEnv, isLegacy) {
+      var sParameters, tParameters, sRequiredPositional, tRequiredPositional, sRequiredPositionalLength, tRequiredPositionalLength, requiredPositionalDelta, sOptionalPositional, tOptionalPositional, sOptionalPositionalLength, tOptionalPositionalLength, i, t1, sNamed, tNamed, sNamedLength, tNamedLength, sIndex, tIndex, tName, sName, sIsRequired;
+      if (!A._isSubtype(universe, s._primary, sEnv, t._primary, tEnv, false))
+        return false;
+      sParameters = s._rest;
+      tParameters = t._rest;
+      sRequiredPositional = sParameters._requiredPositional;
+      tRequiredPositional = tParameters._requiredPositional;
+      sRequiredPositionalLength = sRequiredPositional.length;
+      tRequiredPositionalLength = tRequiredPositional.length;
+      if (sRequiredPositionalLength > tRequiredPositionalLength)
+        return false;
+      requiredPositionalDelta = tRequiredPositionalLength - sRequiredPositionalLength;
+      sOptionalPositional = sParameters._optionalPositional;
+      tOptionalPositional = tParameters._optionalPositional;
+      sOptionalPositionalLength = sOptionalPositional.length;
+      tOptionalPositionalLength = tOptionalPositional.length;
+      if (sRequiredPositionalLength + sOptionalPositionalLength < tRequiredPositionalLength + tOptionalPositionalLength)
+        return false;
+      for (i = 0; i < sRequiredPositionalLength; ++i) {
+        t1 = sRequiredPositional[i];
+        if (!A._isSubtype(universe, tRequiredPositional[i], tEnv, t1, sEnv, false))
+          return false;
+      }
+      for (i = 0; i < requiredPositionalDelta; ++i) {
+        t1 = sOptionalPositional[i];
+        if (!A._isSubtype(universe, tRequiredPositional[sRequiredPositionalLength + i], tEnv, t1, sEnv, false))
+          return false;
+      }
+      for (i = 0; i < tOptionalPositionalLength; ++i) {
+        t1 = sOptionalPositional[requiredPositionalDelta + i];
+        if (!A._isSubtype(universe, tOptionalPositional[i], tEnv, t1, sEnv, false))
+          return false;
+      }
+      sNamed = sParameters._named;
+      tNamed = tParameters._named;
+      sNamedLength = sNamed.length;
+      tNamedLength = tNamed.length;
+      for (sIndex = 0, tIndex = 0; tIndex < tNamedLength; tIndex += 3) {
+        tName = tNamed[tIndex];
+        for (; true;) {
+          if (sIndex >= sNamedLength)
+            return false;
+          sName = sNamed[sIndex];
+          sIndex += 3;
+          if (tName < sName)
+            return false;
+          sIsRequired = sNamed[sIndex - 2];
+          if (sName < tName) {
+            if (sIsRequired)
+              return false;
+            continue;
+          }
+          t1 = tNamed[tIndex + 1];
+          if (sIsRequired && !t1)
+            return false;
+          t1 = sNamed[sIndex - 1];
+          if (!A._isSubtype(universe, tNamed[tIndex + 2], tEnv, t1, sEnv, false))
+            return false;
+          break;
+        }
+      }
+      for (; sIndex < sNamedLength;) {
+        if (sNamed[sIndex + 1])
+          return false;
+        sIndex += 3;
+      }
+      return true;
+    },
+    _isInterfaceSubtype(universe, s, sEnv, t, tEnv, isLegacy) {
+      var rule, recipes, $length, supertypeArgs, i,
+        sName = s._primary,
+        tName = t._primary;
+      for (; sName !== tName;) {
+        rule = universe.tR[sName];
+        if (rule == null)
+          return false;
+        if (typeof rule == "string") {
+          sName = rule;
+          continue;
+        }
+        recipes = rule[tName];
+        if (recipes == null)
+          return false;
+        $length = recipes.length;
+        supertypeArgs = $length > 0 ? new Array($length) : init.typeUniverse.sEA;
+        for (i = 0; i < $length; ++i)
+          supertypeArgs[i] = A._Universe_evalInEnvironment(universe, s, recipes[i]);
+        return A._areArgumentsSubtypes(universe, supertypeArgs, null, sEnv, t._rest, tEnv, false);
+      }
+      return A._areArgumentsSubtypes(universe, s._rest, null, sEnv, t._rest, tEnv, false);
+    },
+    _areArgumentsSubtypes(universe, sArgs, sVariances, sEnv, tArgs, tEnv, isLegacy) {
+      var i,
+        $length = sArgs.length;
+      for (i = 0; i < $length; ++i)
+        if (!A._isSubtype(universe, sArgs[i], sEnv, tArgs[i], tEnv, false))
+          return false;
+      return true;
+    },
+    _isRecordSubtype(universe, s, sEnv, t, tEnv, isLegacy) {
+      var i,
+        sFields = s._rest,
+        tFields = t._rest,
+        sCount = sFields.length;
+      if (sCount !== tFields.length)
+        return false;
+      if (s._primary !== t._primary)
+        return false;
+      for (i = 0; i < sCount; ++i)
+        if (!A._isSubtype(universe, sFields[i], sEnv, tFields[i], tEnv, false))
+          return false;
+      return true;
+    },
+    isNullable(t) {
+      var kind = t._kind,
+        t1 = true;
+      if (!(t === type$.Null || t === type$.JSNull))
+        if (!A.isSoundTopType(t))
+          if (kind !== 7)
+            if (!(kind === 6 && A.isNullable(t._primary)))
+              t1 = kind === 8 && A.isNullable(t._primary);
+      return t1;
+    },
+    isDefinitelyTopType(t) {
+      var t1;
+      if (!A.isSoundTopType(t))
+        t1 = t === type$.legacy_Object;
+      else
+        t1 = true;
+      return t1;
+    },
+    isSoundTopType(t) {
+      var kind = t._kind;
+      return kind === 2 || kind === 3 || kind === 4 || kind === 5 || t === type$.nullable_Object;
     },
     _Utils_objectAssign(o, other) {
       var i, key,
@@ -241,22 +2352,1073 @@
         o[key] = other[key];
       }
     },
+    _Utils_newArrayOrEmpty($length) {
+      return $length > 0 ? new Array($length) : init.typeUniverse.sEA;
+    },
+    Rti: function Rti(t0, t1) {
+      var _ = this;
+      _._as = t0;
+      _._is = t1;
+      _._cachedRuntimeType = _._specializedTestResource = _._isSubtypeCache = _._precomputed1 = null;
+      _._kind = 0;
+      _._canonicalRecipe = _._bindCache = _._evalCache = _._rest = _._primary = null;
+    },
+    _FunctionParameters: function _FunctionParameters() {
+      this._named = this._optionalPositional = this._requiredPositional = null;
+    },
+    _Type: function _Type(t0) {
+      this._rti = t0;
+    },
+    _Error: function _Error() {
+    },
+    _TypeError: function _TypeError(t0) {
+      this.__rti$_message = t0;
+    },
+    MapBase_mapToString(m) {
+      var result, t1 = {};
+      if (A.isToStringVisiting(m))
+        return "{...}";
+      result = new A.StringBuffer("");
+      try {
+        B.JSArray_methods.add$1($.toStringVisiting, m);
+        result._contents += "{";
+        t1.first = true;
+        m.forEach$1(0, new A.MapBase_mapToString_closure(t1, result));
+        result._contents += "}";
+      } finally {
+        if (0 >= $.toStringVisiting.length)
+          return A.ioore($.toStringVisiting, -1);
+        $.toStringVisiting.pop();
+      }
+      t1 = result._contents;
+      return t1.charCodeAt(0) == 0 ? t1 : t1;
+    },
+    MapBase: function MapBase() {
+    },
+    MapBase_mapToString_closure: function MapBase_mapToString_closure(t0, t1) {
+      this._box_0 = t0;
+      this.result = t1;
+    },
+    _UnmodifiableMapMixin: function _UnmodifiableMapMixin() {
+    },
+    MapView: function MapView() {
+    },
+    UnmodifiableMapView: function UnmodifiableMapView() {
+    },
+    _UnmodifiableMapView_MapView__UnmodifiableMapMixin: function _UnmodifiableMapView_MapView__UnmodifiableMapMixin() {
+    },
+    List_List$of(elements, $E) {
+      var t1 = A.List_List$_of(elements, $E);
+      return t1;
+    },
+    List_List$_of(elements, $E) {
+      var t1 = A._setArrayType(elements.slice(0), $E._eval$1("JSArray<0>"));
+      return t1;
+    },
+    StringBuffer__writeAll(string, objects, separator) {
+      var t2,
+        t1 = A._arrayInstanceType(objects),
+        iterator = new J.ArrayIterator(objects, objects.length, t1._eval$1("ArrayIterator<1>"));
+      if (!iterator.moveNext$0())
+        return string;
+      if (separator.length === 0) {
+        t1 = t1._precomputed1;
+        do {
+          t2 = iterator._current;
+          string += A.S(t2 == null ? t1._as(t2) : t2);
+        } while (iterator.moveNext$0());
+      } else {
+        t2 = iterator._current;
+        string += A.S(t2 == null ? t1._precomputed1._as(t2) : t2);
+        for (t1 = t1._precomputed1; iterator.moveNext$0();) {
+          t2 = iterator._current;
+          string = string + separator + A.S(t2 == null ? t1._as(t2) : t2);
+        }
+      }
+      return string;
+    },
+    NoSuchMethodError_NoSuchMethodError$withInvocation(receiver, invocation) {
+      return new A.NoSuchMethodError(receiver, invocation.get$memberName(), invocation.get$positionalArguments(), invocation.get$namedArguments());
+    },
+    Error_safeToString(object) {
+      if (typeof object == "number" || A._isBool(object) || object == null)
+        return J.toString$0$(object);
+      if (typeof object == "string")
+        return JSON.stringify(object);
+      return A.Primitives_safeToString(object);
+    },
+    AssertionError$(message) {
+      return new A.AssertionError(message);
+    },
+    ArgumentError$(message) {
+      return new A.ArgumentError(false, null, null, message);
+    },
+    UnsupportedError$(message) {
+      return new A.UnsupportedError(message);
+    },
+    ConcurrentModificationError$(modifiedObject) {
+      return new A.ConcurrentModificationError(modifiedObject);
+    },
+    Iterable_iterableToFullString(iterable, leftDelimiter, rightDelimiter) {
+      var buffer, t1;
+      if (A.isToStringVisiting(iterable))
+        return leftDelimiter + "..." + rightDelimiter;
+      buffer = new A.StringBuffer(leftDelimiter);
+      B.JSArray_methods.add$1($.toStringVisiting, iterable);
+      try {
+        t1 = buffer;
+        t1._contents = A.StringBuffer__writeAll(t1._contents, iterable, ", ");
+      } finally {
+        if (0 >= $.toStringVisiting.length)
+          return A.ioore($.toStringVisiting, -1);
+        $.toStringVisiting.pop();
+      }
+      buffer._contents += rightDelimiter;
+      t1 = buffer._contents;
+      return t1.charCodeAt(0) == 0 ? t1 : t1;
+    },
+    NoSuchMethodError_toString_closure: function NoSuchMethodError_toString_closure(t0, t1) {
+      this._box_0 = t0;
+      this.sb = t1;
+    },
+    Error: function Error() {
+    },
+    AssertionError: function AssertionError(t0) {
+      this.message = t0;
+    },
+    TypeError: function TypeError() {
+    },
+    ArgumentError: function ArgumentError(t0, t1, t2, t3) {
+      var _ = this;
+      _._hasValue = t0;
+      _.invalidValue = t1;
+      _.name = t2;
+      _.message = t3;
+    },
+    RangeError: function RangeError(t0, t1, t2, t3, t4, t5) {
+      var _ = this;
+      _.start = t0;
+      _.end = t1;
+      _._hasValue = t2;
+      _.invalidValue = t3;
+      _.name = t4;
+      _.message = t5;
+    },
+    IndexError: function IndexError(t0, t1, t2, t3, t4) {
+      var _ = this;
+      _.length = t0;
+      _._hasValue = t1;
+      _.invalidValue = t2;
+      _.name = t3;
+      _.message = t4;
+    },
+    NoSuchMethodError: function NoSuchMethodError(t0, t1, t2, t3) {
+      var _ = this;
+      _._core$_receiver = t0;
+      _._core$_memberName = t1;
+      _._core$_arguments = t2;
+      _._namedArguments = t3;
+    },
+    UnsupportedError: function UnsupportedError(t0) {
+      this.message = t0;
+    },
+    ConcurrentModificationError: function ConcurrentModificationError(t0) {
+      this.modifiedObject = t0;
+    },
+    Null: function Null() {
+    },
+    Object: function Object() {
+    },
+    StringBuffer: function StringBuffer(t0) {
+      this._contents = t0;
+    },
+    throwLateFieldADI(fieldName) {
+      A.throwExpressionWithWrapper(new A.LateError("Field '" + fieldName + "' has been assigned during initialization."), new Error());
+    },
+    _convertDartFunctionFast(f) {
+      var ret,
+        existing = f.$dart_jsFunction;
+      if (existing != null)
+        return existing;
+      ret = function(_call, f) {
+        return function() {
+          return _call(f, Array.prototype.slice.apply(arguments));
+        };
+      }(A._callDartFunctionFast, f);
+      ret[$.$get$DART_CLOSURE_PROPERTY_NAME()] = f;
+      f.$dart_jsFunction = ret;
+      return ret;
+    },
+    _callDartFunctionFast(callback, $arguments) {
+      type$.List_dynamic._as($arguments);
+      type$.Function._as(callback);
+      return A.Primitives_applyFunction(callback, $arguments, null);
+    },
+    allowInterop(f, $F) {
+      if (typeof f == "function")
+        return f;
+      else
+        return $F._as(A._convertDartFunctionFast(f));
+    },
+    createStore() {
+      return A.redux_dart__createStore$closure();
+    },
     main() {
+      A.allowInterop(A.main__createStore$closure(), type$.dynamic_Function);
+    },
+    createStore0(reducer, preloadedState, enhancer, rest) {
+      var t1 = J.getInterceptor$(reducer);
+      if (t1.get$runtimeType(reducer) !== B.Type_Function_rsg)
+        throw A.wrapException("Expected the root reducer to be a function. Instead, received: " + t1.get$runtimeType(reducer).toString$0(0));
+      t1 = J.getInterceptor$(preloadedState);
+      if (!(t1.get$runtimeType(preloadedState) === B.Type_Function_rsg && J.get$runtimeType$(enhancer) === B.Type_Function_rsg))
+        t1 = t1.get$runtimeType(preloadedState) === B.Type_Function_rsg && J.get$runtimeType$(rest) === B.Type_Function_rsg;
+      else
+        t1 = true;
+      if (t1)
+        throw A.wrapException("It looks like you are passing several store enhancers to \ncreateStore(). This is not supported. Instead, compose them \ntogether to a single function. See https://redux.js.org/tutorials/fundamentals/part-4-store#creating-a-store-with-enhancers for an example.");
+    }
+  },
+  B = {};
+  var holders = [A, J, B];
+  var $ = {};
+  A.JS_CONST.prototype = {};
+  J.Interceptor.prototype = {
+    $eq(receiver, other) {
+      return receiver === other;
+    },
+    get$hashCode(receiver) {
+      return A.Primitives_objectHashCode(receiver);
+    },
+    toString$0(receiver) {
+      return "Instance of '" + A.Primitives_objectTypeName(receiver) + "'";
+    },
+    noSuchMethod$1(receiver, invocation) {
+      throw A.wrapException(A.NoSuchMethodError_NoSuchMethodError$withInvocation(receiver, type$.Invocation._as(invocation)));
+    },
+    get$runtimeType(receiver) {
+      return A.createRuntimeType(A._instanceTypeFromConstructor(this));
     }
   };
-  var holders = [A];
-  var $ = {};
+  J.JSBool.prototype = {
+    toString$0(receiver) {
+      return String(receiver);
+    },
+    get$hashCode(receiver) {
+      return receiver ? 519018 : 218159;
+    },
+    get$runtimeType(receiver) {
+      return A.createRuntimeType(type$.bool);
+    },
+    $isTrustedGetRuntimeType: 1,
+    $isbool: 1
+  };
+  J.JSNull.prototype = {
+    $eq(receiver, other) {
+      return null == other;
+    },
+    toString$0(receiver) {
+      return "null";
+    },
+    get$hashCode(receiver) {
+      return 0;
+    },
+    get$runtimeType(receiver) {
+      return A.createRuntimeType(type$.Null);
+    },
+    $isTrustedGetRuntimeType: 1
+  };
+  J.JavaScriptObject.prototype = {};
+  J.LegacyJavaScriptObject.prototype = {
+    get$hashCode(receiver) {
+      return 0;
+    },
+    get$runtimeType(receiver) {
+      return B.Type_JSObject_0ua;
+    },
+    toString$0(receiver) {
+      return String(receiver);
+    }
+  };
+  J.JavaScriptFunction.prototype = {
+    toString$0(receiver) {
+      var dartClosure = receiver[$.$get$DART_CLOSURE_PROPERTY_NAME()];
+      if (dartClosure == null)
+        return this.super$LegacyJavaScriptObject$toString(receiver);
+      return "JavaScript function for " + J.toString$0$(dartClosure);
+    },
+    $isFunction: 1
+  };
+  J.JSArray.prototype = {
+    add$1(receiver, value) {
+      A._arrayInstanceType(receiver)._precomputed1._as(value);
+      if (!!receiver.fixed$length)
+        A.throwExpression(A.UnsupportedError$("add"));
+      receiver.push(value);
+    },
+    addAll$1(receiver, collection) {
+      A._arrayInstanceType(receiver)._eval$1("Iterable<1>")._as(collection);
+      if (!!receiver.fixed$length)
+        A.throwExpression(A.UnsupportedError$("addAll"));
+      this._addAllFromArray$1(receiver, collection);
+      return;
+    },
+    _addAllFromArray$1(receiver, array) {
+      var len, i;
+      type$.JSArray_dynamic._as(array);
+      len = array.length;
+      if (len === 0)
+        return;
+      if (receiver === array)
+        throw A.wrapException(A.ConcurrentModificationError$(receiver));
+      for (i = 0; i < len; ++i)
+        receiver.push(array[i]);
+    },
+    toString$0(receiver) {
+      return A.Iterable_iterableToFullString(receiver, "[", "]");
+    },
+    get$hashCode(receiver) {
+      return A.Primitives_objectHashCode(receiver);
+    },
+    get$length(receiver) {
+      return receiver.length;
+    },
+    get$runtimeType(receiver) {
+      return A.createRuntimeType(A._arrayInstanceType(receiver));
+    },
+    $isIterable: 1,
+    $isList: 1
+  };
+  J.JSUnmodifiableArray.prototype = {};
+  J.ArrayIterator.prototype = {
+    moveNext$0() {
+      var t2, _this = this,
+        t1 = _this._iterable,
+        $length = t1.length;
+      if (_this._length !== $length) {
+        t1 = A.throwConcurrentModificationError(t1);
+        throw A.wrapException(t1);
+      }
+      t2 = _this._index;
+      if (t2 >= $length) {
+        _this.set$_current(null);
+        return false;
+      }
+      _this.set$_current(t1[t2]);
+      ++_this._index;
+      return true;
+    },
+    set$_current(_current) {
+      this._current = this.$ti._eval$1("1?")._as(_current);
+    }
+  };
+  J.JSNumber.prototype = {
+    toString$0(receiver) {
+      if (receiver === 0 && 1 / receiver < 0)
+        return "-0.0";
+      else
+        return "" + receiver;
+    },
+    get$hashCode(receiver) {
+      var absolute, floorLog2, factor, scaled,
+        intValue = receiver | 0;
+      if (receiver === intValue)
+        return intValue & 536870911;
+      absolute = Math.abs(receiver);
+      floorLog2 = Math.log(absolute) / 0.6931471805599453 | 0;
+      factor = Math.pow(2, floorLog2);
+      scaled = absolute < 1 ? absolute / factor : factor / absolute;
+      return ((scaled * 9007199254740992 | 0) + (scaled * 3542243181176521 | 0)) * 599197 + floorLog2 * 1259 & 536870911;
+    },
+    get$runtimeType(receiver) {
+      return A.createRuntimeType(type$.num);
+    },
+    $isnum: 1
+  };
+  J.JSInt.prototype = {
+    get$runtimeType(receiver) {
+      return A.createRuntimeType(type$.int);
+    },
+    $isTrustedGetRuntimeType: 1,
+    $isint: 1
+  };
+  J.JSNumNotInt.prototype = {
+    get$runtimeType(receiver) {
+      return A.createRuntimeType(type$.double);
+    },
+    $isTrustedGetRuntimeType: 1
+  };
+  J.JSString.prototype = {
+    $add(receiver, other) {
+      return receiver + other;
+    },
+    toString$0(receiver) {
+      return receiver;
+    },
+    get$hashCode(receiver) {
+      var t1, hash, i;
+      for (t1 = receiver.length, hash = 0, i = 0; i < t1; ++i) {
+        hash = hash + receiver.charCodeAt(i) & 536870911;
+        hash = hash + ((hash & 524287) << 10) & 536870911;
+        hash ^= hash >> 6;
+      }
+      hash = hash + ((hash & 67108863) << 3) & 536870911;
+      hash ^= hash >> 11;
+      return hash + ((hash & 16383) << 15) & 536870911;
+    },
+    get$runtimeType(receiver) {
+      return A.createRuntimeType(type$.String);
+    },
+    get$length(receiver) {
+      return receiver.length;
+    },
+    $isTrustedGetRuntimeType: 1,
+    $isString: 1
+  };
+  A.LateError.prototype = {
+    toString$0(_) {
+      return "LateInitializationError: " + this._message;
+    }
+  };
+  A.Symbol.prototype = {
+    get$hashCode(_) {
+      var hash = this._hashCode;
+      if (hash != null)
+        return hash;
+      hash = 664597 * B.JSString_methods.get$hashCode(this._name) & 536870911;
+      this._hashCode = hash;
+      return hash;
+    },
+    toString$0(_) {
+      return 'Symbol("' + this._name + '")';
+    },
+    $eq(_, other) {
+      if (other == null)
+        return false;
+      return other instanceof A.Symbol && this._name === other._name;
+    },
+    $isSymbol0: 1
+  };
+  A.ConstantMapView.prototype = {};
+  A.ConstantMap.prototype = {
+    toString$0(_) {
+      return A.MapBase_mapToString(this);
+    },
+    $isMap: 1
+  };
+  A.ConstantStringMap.prototype = {
+    get$length(_) {
+      return this._values.length;
+    },
+    forEach$1(_, f) {
+      var keys, values, t1, i, _this = this;
+      _this.$ti._eval$1("~(1,2)")._as(f);
+      keys = _this.$keys;
+      if (keys == null) {
+        keys = Object.keys(_this._jsIndex);
+        _this.$keys = keys;
+      }
+      keys = keys;
+      values = _this._values;
+      for (t1 = keys.length, i = 0; i < t1; ++i)
+        f.call$2(keys[i], values[i]);
+    }
+  };
+  A.JSInvocationMirror.prototype = {
+    get$memberName() {
+      var t1 = this._memberName;
+      return t1;
+    },
+    get$positionalArguments() {
+      var t1, argumentCount, list, index, _this = this;
+      if (_this.__js_helper$_kind === 1)
+        return B.List_empty;
+      t1 = _this._arguments;
+      argumentCount = t1.length - _this._namedArgumentNames.length - _this._typeArgumentCount;
+      if (argumentCount === 0)
+        return B.List_empty;
+      list = [];
+      for (index = 0; index < argumentCount; ++index) {
+        if (!(index < t1.length))
+          return A.ioore(t1, index);
+        list.push(t1[index]);
+      }
+      list.fixed$length = Array;
+      list.immutable$list = Array;
+      return list;
+    },
+    get$namedArguments() {
+      var t1, namedArgumentCount, t2, namedArgumentsStartIndex, map, i, t3, t4, _this = this;
+      if (_this.__js_helper$_kind !== 0)
+        return B.Map_empty;
+      t1 = _this._namedArgumentNames;
+      namedArgumentCount = t1.length;
+      t2 = _this._arguments;
+      namedArgumentsStartIndex = t2.length - namedArgumentCount - _this._typeArgumentCount;
+      if (namedArgumentCount === 0)
+        return B.Map_empty;
+      map = new A.JsLinkedHashMap(type$.JsLinkedHashMap_Symbol_dynamic);
+      for (i = 0; i < namedArgumentCount; ++i) {
+        if (!(i < t1.length))
+          return A.ioore(t1, i);
+        t3 = t1[i];
+        t4 = namedArgumentsStartIndex + i;
+        if (!(t4 >= 0 && t4 < t2.length))
+          return A.ioore(t2, t4);
+        map.$indexSet(0, new A.Symbol(t3), t2[t4]);
+      }
+      return new A.ConstantMapView(map, type$.ConstantMapView_Symbol_dynamic);
+    },
+    $isInvocation: 1
+  };
+  A.Primitives_functionNoSuchMethod_closure.prototype = {
+    call$2($name, argument) {
+      var t1;
+      A._asString($name);
+      t1 = this._box_0;
+      t1.names = t1.names + "$" + $name;
+      B.JSArray_methods.add$1(this.namedArgumentList, $name);
+      B.JSArray_methods.add$1(this.$arguments, argument);
+      ++t1.argumentCount;
+    },
+    $signature: 0
+  };
+  A.Closure.prototype = {
+    toString$0(_) {
+      var $constructor = this.constructor,
+        $name = $constructor == null ? null : $constructor.name;
+      return "Closure '" + A.unminifyOrTag($name == null ? "unknown" : $name) + "'";
+    },
+    get$runtimeType(_) {
+      var rti = A.closureFunctionType(this);
+      return A.createRuntimeType(rti == null ? A.instanceType(this) : rti);
+    },
+    $isFunction: 1,
+    get$$call() {
+      return this;
+    },
+    "call*": "call$1",
+    $requiredArgCount: 1,
+    $defaultValues: null
+  };
+  A.Closure2Args.prototype = {"call*": "call$2", $requiredArgCount: 2};
+  A.TearOffClosure.prototype = {};
+  A.StaticClosure.prototype = {
+    toString$0(_) {
+      var $name = this.$static_name;
+      if ($name == null)
+        return "Closure of unknown static method";
+      return "Closure '" + A.unminifyOrTag($name) + "'";
+    }
+  };
+  A.BoundClosure.prototype = {
+    $eq(_, other) {
+      if (other == null)
+        return false;
+      if (this === other)
+        return true;
+      if (!(other instanceof A.BoundClosure))
+        return false;
+      return this.$_target === other.$_target && this._receiver === other._receiver;
+    },
+    get$hashCode(_) {
+      return (A.objectHashCode(this._receiver) ^ A.Primitives_objectHashCode(this.$_target)) >>> 0;
+    },
+    toString$0(_) {
+      return "Closure '" + this.$_name + "' of " + ("Instance of '" + A.Primitives_objectTypeName(this._receiver) + "'");
+    }
+  };
+  A._CyclicInitializationError.prototype = {
+    toString$0(_) {
+      return "Reading static variable '" + this.variableName + "' during its initialization";
+    }
+  };
+  A.RuntimeError.prototype = {
+    toString$0(_) {
+      return "RuntimeError: " + this.message;
+    }
+  };
+  A._Required.prototype = {};
+  A.JsLinkedHashMap.prototype = {
+    get$length(_) {
+      return this.__js_helper$_length;
+    },
+    containsKey$1(key) {
+      var strings = this._strings;
+      if (strings == null)
+        return false;
+      return strings[key] != null;
+    },
+    $index(_, key) {
+      var strings, cell, t1, nums, _null = null;
+      if (typeof key == "string") {
+        strings = this._strings;
+        if (strings == null)
+          return _null;
+        cell = strings[key];
+        t1 = cell == null ? _null : cell.hashMapCellValue;
+        return t1;
+      } else if (typeof key == "number" && (key & 0x3fffffff) === key) {
+        nums = this._nums;
+        if (nums == null)
+          return _null;
+        cell = nums[key];
+        t1 = cell == null ? _null : cell.hashMapCellValue;
+        return t1;
+      } else
+        return this.internalGet$1(key);
+    },
+    internalGet$1(key) {
+      var bucket, index,
+        rest = this.__js_helper$_rest;
+      if (rest == null)
+        return null;
+      bucket = rest[this.internalComputeHashCode$1(key)];
+      index = this.internalFindBucketIndex$2(bucket, key);
+      if (index < 0)
+        return null;
+      return bucket[index].hashMapCellValue;
+    },
+    $indexSet(_, key, value) {
+      var strings, nums, rest, hash, bucket, index, _this = this,
+        t1 = A._instanceType(_this);
+      t1._precomputed1._as(key);
+      t1._rest[1]._as(value);
+      if (typeof key == "string") {
+        strings = _this._strings;
+        _this._addHashTableEntry$3(strings == null ? _this._strings = _this._newHashTable$0() : strings, key, value);
+      } else if (typeof key == "number" && (key & 0x3fffffff) === key) {
+        nums = _this._nums;
+        _this._addHashTableEntry$3(nums == null ? _this._nums = _this._newHashTable$0() : nums, key, value);
+      } else {
+        rest = _this.__js_helper$_rest;
+        if (rest == null)
+          rest = _this.__js_helper$_rest = _this._newHashTable$0();
+        hash = _this.internalComputeHashCode$1(key);
+        bucket = rest[hash];
+        if (bucket == null)
+          rest[hash] = [_this._newLinkedCell$2(key, value)];
+        else {
+          index = _this.internalFindBucketIndex$2(bucket, key);
+          if (index >= 0)
+            bucket[index].hashMapCellValue = value;
+          else
+            bucket.push(_this._newLinkedCell$2(key, value));
+        }
+      }
+    },
+    forEach$1(_, action) {
+      var cell, modifications, _this = this;
+      A._instanceType(_this)._eval$1("~(1,2)")._as(action);
+      cell = _this._first;
+      modifications = _this._modifications;
+      for (; cell != null;) {
+        action.call$2(cell.hashMapCellKey, cell.hashMapCellValue);
+        if (modifications !== _this._modifications)
+          throw A.wrapException(A.ConcurrentModificationError$(_this));
+        cell = cell._next;
+      }
+    },
+    _addHashTableEntry$3(table, key, value) {
+      var cell,
+        t1 = A._instanceType(this);
+      t1._precomputed1._as(key);
+      t1._rest[1]._as(value);
+      cell = table[key];
+      if (cell == null)
+        table[key] = this._newLinkedCell$2(key, value);
+      else
+        cell.hashMapCellValue = value;
+    },
+    _newLinkedCell$2(key, value) {
+      var _this = this,
+        t1 = A._instanceType(_this),
+        cell = new A.LinkedHashMapCell(t1._precomputed1._as(key), t1._rest[1]._as(value));
+      if (_this._first == null)
+        _this._first = _this._last = cell;
+      else
+        _this._last = _this._last._next = cell;
+      ++_this.__js_helper$_length;
+      _this._modifications = _this._modifications + 1 & 1073741823;
+      return cell;
+    },
+    internalComputeHashCode$1(key) {
+      return J.get$hashCode$(key) & 1073741823;
+    },
+    internalFindBucketIndex$2(bucket, key) {
+      var $length, i;
+      if (bucket == null)
+        return -1;
+      $length = bucket.length;
+      for (i = 0; i < $length; ++i)
+        if (J.$eq$(bucket[i].hashMapCellKey, key))
+          return i;
+      return -1;
+    },
+    toString$0(_) {
+      return A.MapBase_mapToString(this);
+    },
+    _newHashTable$0() {
+      var table = Object.create(null);
+      table["<non-identifier-key>"] = table;
+      delete table["<non-identifier-key>"];
+      return table;
+    }
+  };
+  A.LinkedHashMapCell.prototype = {};
+  A.Rti.prototype = {
+    _eval$1(recipe) {
+      return A._Universe_evalInEnvironment(init.typeUniverse, this, recipe);
+    },
+    _bind$1(typeOrTuple) {
+      return A._Universe_bind(init.typeUniverse, this, typeOrTuple);
+    }
+  };
+  A._FunctionParameters.prototype = {};
+  A._Type.prototype = {
+    toString$0(_) {
+      return A._rtiToString(this._rti, null);
+    }
+  };
+  A._Error.prototype = {
+    toString$0(_) {
+      return this.__rti$_message;
+    }
+  };
+  A._TypeError.prototype = {};
+  A.MapBase.prototype = {
+    get$length(_) {
+      return this.__js_helper$_length;
+    },
+    toString$0(_) {
+      return A.MapBase_mapToString(this);
+    },
+    $isMap: 1
+  };
+  A.MapBase_mapToString_closure.prototype = {
+    call$2(k, v) {
+      var t2,
+        t1 = this._box_0;
+      if (!t1.first)
+        this.result._contents += ", ";
+      t1.first = false;
+      t1 = this.result;
+      t2 = A.S(k);
+      t2 = t1._contents += t2;
+      t1._contents = t2 + ": ";
+      t2 = A.S(v);
+      t1._contents += t2;
+    },
+    $signature: 1
+  };
+  A._UnmodifiableMapMixin.prototype = {};
+  A.MapView.prototype = {
+    forEach$1(_, action) {
+      this._map.forEach$1(0, this.$ti._eval$1("~(1,2)")._as(action));
+    },
+    get$length(_) {
+      return this._map.__js_helper$_length;
+    },
+    toString$0(_) {
+      return A.MapBase_mapToString(this._map);
+    },
+    $isMap: 1
+  };
+  A.UnmodifiableMapView.prototype = {};
+  A._UnmodifiableMapView_MapView__UnmodifiableMapMixin.prototype = {};
+  A.NoSuchMethodError_toString_closure.prototype = {
+    call$2(key, value) {
+      var t1, t2, t3;
+      type$.Symbol._as(key);
+      t1 = this.sb;
+      t2 = this._box_0;
+      t3 = t1._contents += t2.comma;
+      t3 += key._name;
+      t1._contents = t3;
+      t1._contents = t3 + ": ";
+      t3 = A.Error_safeToString(value);
+      t1._contents += t3;
+      t2.comma = ", ";
+    },
+    $signature: 2
+  };
+  A.Error.prototype = {};
+  A.AssertionError.prototype = {
+    toString$0(_) {
+      var t1 = this.message;
+      if (t1 != null)
+        return "Assertion failed: " + A.Error_safeToString(t1);
+      return "Assertion failed";
+    }
+  };
+  A.TypeError.prototype = {};
+  A.ArgumentError.prototype = {
+    get$_errorName() {
+      return "Invalid argument" + (!this._hasValue ? "(s)" : "");
+    },
+    get$_errorExplanation() {
+      return "";
+    },
+    toString$0(_) {
+      var _this = this,
+        $name = _this.name,
+        nameString = $name == null ? "" : " (" + $name + ")",
+        message = _this.message,
+        messageString = message == null ? "" : ": " + message,
+        prefix = _this.get$_errorName() + nameString + messageString;
+      if (!_this._hasValue)
+        return prefix;
+      return prefix + _this.get$_errorExplanation() + ": " + A.Error_safeToString(_this.get$invalidValue());
+    },
+    get$invalidValue() {
+      return this.invalidValue;
+    }
+  };
+  A.RangeError.prototype = {
+    get$invalidValue() {
+      return A._asNumQ(this.invalidValue);
+    },
+    get$_errorName() {
+      return "RangeError";
+    },
+    get$_errorExplanation() {
+      var explanation,
+        start = this.start,
+        end = this.end;
+      if (start == null)
+        explanation = end != null ? ": Not less than or equal to " + A.S(end) : "";
+      else if (end == null)
+        explanation = ": Not greater than or equal to " + A.S(start);
+      else if (end > start)
+        explanation = ": Not in inclusive range " + A.S(start) + ".." + A.S(end);
+      else
+        explanation = end < start ? ": Valid value range is empty" : ": Only valid value is " + A.S(start);
+      return explanation;
+    }
+  };
+  A.IndexError.prototype = {
+    get$invalidValue() {
+      return A._asInt(this.invalidValue);
+    },
+    get$_errorName() {
+      return "RangeError";
+    },
+    get$_errorExplanation() {
+      if (A._asInt(this.invalidValue) < 0)
+        return ": index must not be negative";
+      var t1 = this.length;
+      if (t1 === 0)
+        return ": no indices are valid";
+      return ": index should be less than " + t1;
+    },
+    get$length(receiver) {
+      return this.length;
+    }
+  };
+  A.NoSuchMethodError.prototype = {
+    toString$0(_) {
+      var $arguments, t1, _i, t2, t3, argument, receiverText, actualParameters, _this = this, _box_0 = {},
+        sb = new A.StringBuffer("");
+      _box_0.comma = "";
+      $arguments = _this._core$_arguments;
+      for (t1 = $arguments.length, _i = 0, t2 = "", t3 = ""; _i < t1; ++_i, t3 = ", ") {
+        argument = $arguments[_i];
+        sb._contents = t2 + t3;
+        t2 = A.Error_safeToString(argument);
+        t2 = sb._contents += t2;
+        _box_0.comma = ", ";
+      }
+      _this._namedArguments.forEach$1(0, new A.NoSuchMethodError_toString_closure(_box_0, sb));
+      receiverText = A.Error_safeToString(_this._core$_receiver);
+      actualParameters = sb.toString$0(0);
+      return "NoSuchMethodError: method not found: '" + _this._core$_memberName._name + "'\nReceiver: " + receiverText + "\nArguments: [" + actualParameters + "]";
+    }
+  };
+  A.UnsupportedError.prototype = {
+    toString$0(_) {
+      return "Unsupported operation: " + this.message;
+    }
+  };
+  A.ConcurrentModificationError.prototype = {
+    toString$0(_) {
+      var t1 = this.modifiedObject;
+      if (t1 == null)
+        return "Concurrent modification during iteration.";
+      return "Concurrent modification during iteration: " + A.Error_safeToString(t1) + ".";
+    }
+  };
+  A.Null.prototype = {
+    get$hashCode(_) {
+      return A.Object.prototype.get$hashCode.call(this, 0);
+    },
+    toString$0(_) {
+      return "null";
+    }
+  };
+  A.Object.prototype = {$isObject: 1,
+    $eq(_, other) {
+      return this === other;
+    },
+    get$hashCode(_) {
+      return A.Primitives_objectHashCode(this);
+    },
+    toString$0(_) {
+      return "Instance of '" + A.Primitives_objectTypeName(this) + "'";
+    },
+    noSuchMethod$1(_, invocation) {
+      throw A.wrapException(A.NoSuchMethodError_NoSuchMethodError$withInvocation(this, type$.Invocation._as(invocation)));
+    },
+    get$runtimeType(_) {
+      return A.getRuntimeTypeOfDartObject(this);
+    },
+    toString() {
+      return this.toString$0(this);
+    }
+  };
+  A.StringBuffer.prototype = {
+    get$length(_) {
+      return this._contents.length;
+    },
+    toString$0(_) {
+      var t1 = this._contents;
+      return t1.charCodeAt(0) == 0 ? t1 : t1;
+    }
+  };
+  (function aliases() {
+    var _ = J.LegacyJavaScriptObject.prototype;
+    _.super$LegacyJavaScriptObject$toString = _.toString$0;
+  })();
+  (function installTearOffs() {
+    var _static_0 = hunkHelpers._static_0,
+      _static = hunkHelpers.installStaticTearOff;
+    _static_0(A, "main__createStore$closure", "createStore", 3);
+    _static(A, "redux_dart__createStore$closure", 3, function() {
+      return [null];
+    }, ["call$4"], ["createStore0"], 4, 0);
+  })();
+  (function inheritance() {
+    var _mixin = hunkHelpers.mixin,
+      _inherit = hunkHelpers.inherit,
+      _inheritMany = hunkHelpers.inheritMany;
+    _inherit(A.Object, null);
+    _inheritMany(A.Object, [A.JS_CONST, J.Interceptor, J.ArrayIterator, A.Error, A.Symbol, A.MapView, A.ConstantMap, A.JSInvocationMirror, A.Closure, A._Required, A.MapBase, A.LinkedHashMapCell, A.Rti, A._FunctionParameters, A._Type, A._UnmodifiableMapMixin, A.Null, A.StringBuffer]);
+    _inheritMany(J.Interceptor, [J.JSBool, J.JSNull, J.JavaScriptObject, J.JSNumber, J.JSString]);
+    _inheritMany(J.JavaScriptObject, [J.LegacyJavaScriptObject, J.JSArray]);
+    _inherit(J.JavaScriptFunction, J.LegacyJavaScriptObject);
+    _inherit(J.JSUnmodifiableArray, J.JSArray);
+    _inheritMany(J.JSNumber, [J.JSInt, J.JSNumNotInt]);
+    _inheritMany(A.Error, [A.LateError, A._CyclicInitializationError, A.RuntimeError, A._Error, A.AssertionError, A.TypeError, A.ArgumentError, A.NoSuchMethodError, A.UnsupportedError, A.ConcurrentModificationError]);
+    _inherit(A._UnmodifiableMapView_MapView__UnmodifiableMapMixin, A.MapView);
+    _inherit(A.UnmodifiableMapView, A._UnmodifiableMapView_MapView__UnmodifiableMapMixin);
+    _inherit(A.ConstantMapView, A.UnmodifiableMapView);
+    _inherit(A.ConstantStringMap, A.ConstantMap);
+    _inheritMany(A.Closure, [A.Closure2Args, A.TearOffClosure]);
+    _inheritMany(A.Closure2Args, [A.Primitives_functionNoSuchMethod_closure, A.MapBase_mapToString_closure, A.NoSuchMethodError_toString_closure]);
+    _inheritMany(A.TearOffClosure, [A.StaticClosure, A.BoundClosure]);
+    _inherit(A.JsLinkedHashMap, A.MapBase);
+    _inherit(A._TypeError, A._Error);
+    _inheritMany(A.ArgumentError, [A.RangeError, A.IndexError]);
+    _mixin(A._UnmodifiableMapView_MapView__UnmodifiableMapMixin, A._UnmodifiableMapMixin);
+  })();
   var init = {
     typeUniverse: {eC: new Map(), tR: {}, eT: {}, tPV: {}, sEA: []},
     mangledGlobalNames: {int: "int", double: "double", num: "num", String: "String", bool: "bool", Null: "Null", List: "List", Object: "Object", Map: "Map"},
     mangledNames: {},
-    types: [],
+    types: ["~(String,@)", "~(Object?,Object?)", "~(Symbol0,@)", "@()", "@(@,@,@[@])"],
+    interceptorsByTag: null,
+    leafTags: null,
     arrayRti: Symbol("$ti")
   };
+  A._Universe_addRules(init.typeUniverse, JSON.parse('{"JavaScriptFunction":"LegacyJavaScriptObject","JSBool":{"bool":[],"TrustedGetRuntimeType":[]},"JSNull":{"TrustedGetRuntimeType":[]},"JSArray":{"List":["1"],"Iterable":["1"]},"JSUnmodifiableArray":{"JSArray":["1"],"List":["1"],"Iterable":["1"]},"JSNumber":{"num":[]},"JSInt":{"int":[],"num":[],"TrustedGetRuntimeType":[]},"JSNumNotInt":{"num":[],"TrustedGetRuntimeType":[]},"JSString":{"String":[],"TrustedGetRuntimeType":[]},"Symbol":{"Symbol0":[]},"ConstantMapView":{"UnmodifiableMapView":["1","2"],"_UnmodifiableMapView_MapView__UnmodifiableMapMixin":["1","2"],"MapView":["1","2"],"_UnmodifiableMapMixin":["1","2"],"Map":["1","2"]},"ConstantMap":{"Map":["1","2"]},"ConstantStringMap":{"ConstantMap":["1","2"],"Map":["1","2"]},"JSInvocationMirror":{"Invocation":[]},"Closure":{"Function":[]},"Closure2Args":{"Function":[]},"TearOffClosure":{"Function":[]},"StaticClosure":{"Function":[]},"BoundClosure":{"Function":[]},"JsLinkedHashMap":{"MapBase":["1","2"],"Map":["1","2"]},"MapBase":{"Map":["1","2"]},"MapView":{"Map":["1","2"]},"UnmodifiableMapView":{"_UnmodifiableMapView_MapView__UnmodifiableMapMixin":["1","2"],"MapView":["1","2"],"_UnmodifiableMapMixin":["1","2"],"Map":["1","2"]}}'));
+  var type$ = (function rtii() {
+    var findType = A.findType;
+    return {
+      ConstantMapView_Symbol_dynamic: findType("ConstantMapView<Symbol0,@>"),
+      Function: findType("Function"),
+      Invocation: findType("Invocation"),
+      JSArray_String: findType("JSArray<String>"),
+      JSArray_dynamic: findType("JSArray<@>"),
+      JSNull: findType("JSNull"),
+      JavaScriptFunction: findType("JavaScriptFunction"),
+      JsLinkedHashMap_Symbol_dynamic: findType("JsLinkedHashMap<Symbol0,@>"),
+      List_dynamic: findType("List<@>"),
+      Null: findType("Null"),
+      Object: findType("Object"),
+      Record: findType("Record"),
+      String: findType("String"),
+      Symbol: findType("Symbol0"),
+      TrustedGetRuntimeType: findType("TrustedGetRuntimeType"),
+      bool: findType("bool"),
+      double: findType("double"),
+      dynamic: findType("@"),
+      dynamic_Function: findType("@()"),
+      int: findType("int"),
+      legacy_Never: findType("0&*"),
+      legacy_Object: findType("Object*"),
+      nullable_Future_Null: findType("Future<Null>?"),
+      nullable_Object: findType("Object?"),
+      num: findType("num")
+    };
+  })();
+  (function constants() {
+    var makeConstList = hunkHelpers.makeConstList;
+    B.Interceptor_methods = J.Interceptor.prototype;
+    B.JSArray_methods = J.JSArray.prototype;
+    B.JSString_methods = J.JSString.prototype;
+    B.JavaScriptObject_methods = J.JavaScriptObject.prototype;
+    B.C_JS_CONST = function getTagFallback(o) {
+  var s = Object.prototype.toString.call(o);
+  return s.substring(8, s.length - 1);
+};
+    B.C__Required = new A._Required();
+    B.List_empty = A._setArrayType(makeConstList([]), type$.JSArray_dynamic);
+    B.Object_empty = {};
+    B.Map_empty = new A.ConstantStringMap(B.Object_empty, [], A.findType("ConstantStringMap<Symbol0,@>"));
+    B.Symbol_call = new A.Symbol("call");
+    B.Type_Function_rsg = A.typeLiteral("Function");
+    B.Type_JSObject_0ua = A.typeLiteral("JSObject");
+  })();
+  (function staticFields() {
+    $.toStringVisiting = A._setArrayType([], A.findType("JSArray<Object>"));
+    $.Primitives__identityHashCodeProperty = null;
+    $.BoundClosure__receiverFieldNameCache = null;
+    $.BoundClosure__interceptorFieldNameCache = null;
+  })();
+  (function lazyInitializers() {
+    var _lazyFinal = hunkHelpers.lazyFinal;
+    _lazyFinal($, "DART_CLOSURE_PROPERTY_NAME", "$get$DART_CLOSURE_PROPERTY_NAME", () => init.getIsolateTag("_$dart_dartClosure"));
+  })();
   (function nativeSupport() {
+    !function() {
+      var intern = function(s) {
+        var o = {};
+        o[s] = 1;
+        return Object.keys(hunkHelpers.convertToFastObject(o))[0];
+      };
+      init.getIsolateTag = function(name) {
+        return intern("___dart_" + name + init.isolateTag);
+      };
+      var tableProperty = "___dart_isolate_tags_";
+      var usedProperties = Object[tableProperty] || (Object[tableProperty] = Object.create(null));
+      var rootProperty = "_ZxYxX";
+      for (var i = 0;; i++) {
+        var property = intern(rootProperty + "_" + i + "_");
+        if (!(property in usedProperties)) {
+          usedProperties[property] = 1;
+          init.isolateTag = property;
+          break;
+        }
+      }
+    }();
     hunkHelpers.setOrUpdateInterceptorsByTag({});
     hunkHelpers.setOrUpdateLeafTags({});
   })();
+  Function.prototype.call$1 = function(a) {
+    return this(a);
+  };
+  Function.prototype.call$2 = function(a, b) {
+    return this(a, b);
+  };
   convertAllToFastObject(holders);
   convertToFastObject($);
   (function(callback) {

@@ -14,7 +14,8 @@
     "test:cov": "vitest --coverage",
     "dartBuildCjs": "dart compile js ./lib/main.dart --output ./dist/redux.js",
     "dartBuildMjs": "dart compile wasm ./lib/main.dart --output ./dist/redux.wasm",
-    "dartTest": "npm run dartBuildMjs && npm run test"
+    "dartTest": "npm run dartBuildMjs && npm run test",
+    "export": "npx dartscript --func createStore --out dist/dartscript/redux.js lib/main.dart"
   },
   "devDependencies": {
     "@babel/core": "^7.24.3",
